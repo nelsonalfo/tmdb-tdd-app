@@ -1,4 +1,4 @@
-package nelsonalfo.tmdbunittetsapp.models;
+package nelsonalfo.tmdbunittestsapp.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

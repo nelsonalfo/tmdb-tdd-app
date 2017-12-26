@@ -1,7 +1,7 @@
-package nelsonalfo.tmdbunittetsapp.api;
+package nelsonalfo.tmdbunittestsapp.api;
 
-import nelsonalfo.tmdbunittetsapp.models.MovieDetail;
-import nelsonalfo.tmdbunittetsapp.models.MoviesResponse;
+import nelsonalfo.tmdbunittestsapp.models.MovieDetail;
+import nelsonalfo.tmdbunittestsapp.models.MoviesResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

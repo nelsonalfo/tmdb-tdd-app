@@ -1,4 +1,4 @@
-package nelsonalfo.tmdbunittetsapp;
+package nelsonalfo.tmdbunittestsapp;
 
 import org.junit.Test;
 

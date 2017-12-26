@@ -1,16 +1,15 @@
-package nelsonalfo.tmdbunittetsapp.models;
+package nelsonalfo.tmdbunittestsapp.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+public class ProductionCompany {
 
-public class Genre {
-
-    @SerializedName("id")
-    @Expose
-    public Integer id;
     @SerializedName("name")
     @Expose
     public String name;
+    @SerializedName("id")
+    @Expose
+    public Integer id;
 
 }

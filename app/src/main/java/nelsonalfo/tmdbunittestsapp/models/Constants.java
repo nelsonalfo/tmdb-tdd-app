@@ -1,4 +1,4 @@
-package nelsonalfo.tmdbunittetsapp.models;
+package nelsonalfo.tmdbunittestsapp.models;
 
 /**
  * Created by nelso on 26/12/2017.

@@ -1,15 +1,16 @@
-package nelsonalfo.tmdbunittetsapp.models;
+package nelsonalfo.tmdbunittestsapp.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class ProductionCountry {
+public class Genre {
 
-    @SerializedName("iso_3166_1")
+    @SerializedName("id")
     @Expose
-    public String countryCode;
+    public Integer id;
     @SerializedName("name")
     @Expose
     public String name;
+
 }

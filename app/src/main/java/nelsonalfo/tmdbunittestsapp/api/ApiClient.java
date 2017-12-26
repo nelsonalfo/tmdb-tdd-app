@@ -1,10 +1,10 @@
-package nelsonalfo.tmdbunittetsapp.api;
+package nelsonalfo.tmdbunittestsapp.api;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static nelsonalfo.tmdbunittetsapp.models.Constants.API_BASE_URL;
+import static nelsonalfo.tmdbunittestsapp.models.Constants.API_BASE_URL;
 
 
 /**

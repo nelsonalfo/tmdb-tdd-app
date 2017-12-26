@@ -1,9 +1,9 @@
-package nelsonalfo.tmdbunittetsapp.screens.list;
+package nelsonalfo.tmdbunittestsapp.screens.list;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import nelsonalfo.tmdbunittetsapp.R;
+import nelsonalfo.tmdbunittestsapp.R;
 
 
 public class MovieListActivity extends AppCompatActivity {
