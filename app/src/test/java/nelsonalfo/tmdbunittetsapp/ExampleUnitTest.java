@@ -1,4 +1,4 @@
-package nelsonalfo.themoviedbunittetsapplication;
+package nelsonalfo.tmdbunittetsapp;
 
 import org.junit.Test;
 

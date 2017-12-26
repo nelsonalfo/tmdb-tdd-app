@@ -1,4 +1,4 @@
-package nelsonalfo.themoviedbunittetsapplication;
+package nelsonalfo.tmdbunittetsapp;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
