@@ -1,4 +1,4 @@
-package nelsonalfo.spotifyunittetsapplication;
+package nelsonalfo.themoviedbunittetsapplication;
 
 import org.junit.Test;
 

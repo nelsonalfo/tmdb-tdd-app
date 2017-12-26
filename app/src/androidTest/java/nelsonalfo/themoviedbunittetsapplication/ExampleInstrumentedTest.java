@@ -1,4 +1,4 @@
-package nelsonalfo.spotifyunittetsapplication;
+package nelsonalfo.themoviedbunittetsapplication;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
