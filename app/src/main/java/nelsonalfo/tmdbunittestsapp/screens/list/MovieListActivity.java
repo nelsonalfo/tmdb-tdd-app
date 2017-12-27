@@ -10,10 +10,11 @@ import butterknife.ButterKnife;
 import nelsonalfo.tmdbunittestsapp.R;
 
 
-public class MovieListActivity extends AppCompatActivity {
+public class MovieListActivity extends AppCompatActivity implements MovieListContract.View {
     @BindView(R.id.movie_list)
     RecyclerView recyclerView;
 
+    private MovieListContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,5 +25,10 @@ public class MovieListActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
+    }
+
+    @Override
+    public void setPresenter(MovieListContract.Presenter presenter) {
+        this.presenter = presenter;
     }
 }
