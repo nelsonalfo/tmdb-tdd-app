@@ -6,10 +6,10 @@ package nelsonalfo.tmdbunittestsapp;
 
 class StaticTestClass {
     public String returnFormattedValue() {
-        return "<" + StaticTestClass.getStubValue() + ">";
+        return "<" + StaticTestClass.getDummyValue() + ">";
     }
 
-    public static String getStubValue() {
+    public static String getDummyValue() {
         return "stubValue";
     }
 }
