@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "nelsonalfo.spotifyunittetsapplication"
+        applicationId "nelsonalfo.tmdbunittestsapp"
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
@@ -31,6 +31,7 @@ dependencies {
     // Retrofit & OkHttp
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
 
     // Librerias para Unit Test
     testCompile "com.google.truth:truth:0.37" // Libreria creada por google para manejar assertions
@@ -39,6 +40,7 @@ dependencies {
     testCompile "org.powermock:powermock-module-junit4:1.7.3"
 
     // Utilitarios
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }

@@ -5,7 +5,8 @@ package nelsonalfo.tmdbunittestsapp.models;
  */
 
 public interface Constants {
-    String API_BASE_URL = "https://api.themoviedb.org/3";
+    String API_KEY = "0fc97bcd8ce7487b95ff73e2d4532846";
+    String API_BASE_URL = "https://api.themoviedb.org/3/";
     String LARGE_IMAGE_SIZE_BASE_URL = "http://image.tmdb.org/t/p/w500/";
     String SMALL_IMAGE_SIZE_BASE_URL = "http://image.tmdb.org/t/p/w92/";
 
