@@ -37,4 +37,8 @@ dependencies {
     testCompile "org.mockito:mockito-core:2.8.9" // Libreria para crear objetos Mock y verificar la ejecucion de metodos dentro de nuestro SUT
     testCompile "org.powermock:powermock-api-mockito2:1.7.3" // Libreria para hacer Mock de metodos estaticos
     testCompile "org.powermock:powermock-module-junit4:1.7.3"
+
+    // Utilitarios
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
