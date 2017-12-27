@@ -56,7 +56,7 @@ public class CommandGetMoviesTest {
 
         try {
             command.run();
-        }catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException ex) {
             assertThat(ex).hasMessageThat().isEqualTo("An instance of TheMovieDbRestApi class is required");
         }
     }
