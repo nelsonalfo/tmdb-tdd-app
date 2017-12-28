@@ -2,6 +2,7 @@ package nelsonalfo.tmdbunittestsapp.command.detail;
 
 import android.support.annotation.NonNull;
 
+import java.io.IOException;
 import java.util.List;
 
 import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
@@ -70,11 +71,20 @@ public class CommandGetMovies implements Command<List<MovieResume>>, Callback<Mo
             case ApiStatus.Code.SERVER_ERROR:
                 listener.notifyError(ApiStatus.SERVER_ERROR);
                 break;
+            case ApiStatus.Code.CLIENT_ERROR:
+                listener.notifyError(ApiStatus.CLIENT_ERROR);
+                break;
         }
     }
 
     @Override
     public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable ex) {
-        //TODO
+        if(listener == null) {
+            return;
+        }
+
+        if(ex instanceof IOException) {
+            listener.notifyError(ApiStatus.NETWORK_ERROR);
+        }
     }
 }

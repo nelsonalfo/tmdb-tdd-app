@@ -1,11 +1,11 @@
 package nelsonalfo.tmdbunittestsapp.command.detail;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -121,7 +121,7 @@ public class CommandGetMoviesTest {
 
     @Test
     public void onResponse_theApiReturnAnServerError_notifyTheError() throws Exception {
-        Response<MoviesResponse> errorResponse = Response.error(500, errorBody);
+        Response<MoviesResponse> errorResponse = Response.error(ApiStatus.Code.SERVER_ERROR, errorBody);
 
         command.onResponse(caller, errorResponse);
 
@@ -130,8 +130,31 @@ public class CommandGetMoviesTest {
     }
 
     @Test
-    @Ignore
-    public void onResponse_theApiReturnAnClientError_() throws Exception {
+    public void onResponse_theApiReturnAnClientError_notifyTheError() throws Exception {
+        Response<MoviesResponse> errorResponse = Response.error(ApiStatus.Code.CLIENT_ERROR, errorBody);
 
+        command.onResponse(caller, errorResponse);
+
+        verify(listener, never()).receiveValue(ArgumentMatchers.<MovieResume>anyList());
+        verify(listener).notifyError(eq(ApiStatus.CLIENT_ERROR));
+    }
+
+    @Test
+    public void onFailure_networkError_notifyTheError() throws Exception {
+        IOException exception = new IOException();
+
+        command.onFailure(caller, exception);
+
+        verify(listener).notifyError(eq(ApiStatus.NETWORK_ERROR));
+    }
+
+    @Test
+    public void onFailure_listenerNotSet_doNothing() throws Exception {
+        IOException exception = new IOException();
+
+        command.setListener(null);
+        command.onFailure(caller, exception);
+
+        verify(listener, never()).notifyError(anyString());
     }
 }
