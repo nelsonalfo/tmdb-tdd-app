@@ -11,5 +11,6 @@ public interface MovieListContract {
 
     interface Presenter {
 
+        void callApi();
     }
 }
