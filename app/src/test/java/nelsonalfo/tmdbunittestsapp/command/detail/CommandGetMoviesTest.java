@@ -5,10 +5,16 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Collections;
+import java.util.List;
+
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
+import nelsonalfo.tmdbunittestsapp.command.Command;
 import nelsonalfo.tmdbunittestsapp.models.Constants;
+import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 import nelsonalfo.tmdbunittestsapp.models.MoviesResponse;
 import retrofit2.Call;
+import retrofit2.Response;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -26,6 +32,8 @@ public class CommandGetMoviesTest {
     private TheMovieDbRestApi service;
     @Mock
     private Call<MoviesResponse> caller;
+    @Mock
+    private Command.Listener<List<MovieResume>> listener;
 
     private CommandGetMovies command;
 
@@ -59,6 +67,23 @@ public class CommandGetMoviesTest {
         } catch (IllegalArgumentException ex) {
             assertThat(ex).hasMessageThat().isEqualTo("An instance of TheMovieDbRestApi class is required");
         }
+    }
+
+    @Test
+    public void onResponse_theApiReturnedAListOfMovies_returnTheGivenList() throws Exception {
+        MoviesResponse body = new MoviesResponse();
+        body.results = Collections.singletonList(new MovieResume());
+        Response<MoviesResponse> response = Response.success(body);
+        command.setListener(listener);
+
+        command.onResponse(caller, response);
+
+        verify(listener).recieveValue(eq(body.results));
+    }
+
+    @Test
+    public void onResponse_theApiReturnAResponseButThereIsNoMovies_returnNull() throws Exception {
+        //TODO
     }
 
     @Test
