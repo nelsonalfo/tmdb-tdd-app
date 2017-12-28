@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
 import nelsonalfo.tmdbunittestsapp.command.Command;
 import nelsonalfo.tmdbunittestsapp.models.Constants;
@@ -18,9 +19,10 @@ import retrofit2.Response;
  * Created by nelso on 27/12/2017.
  */
 
-public class CommandGetMovies extends Command<List<MovieResume>> implements Callback<MoviesResponse> {
+public class CommandGetMovies implements Command<List<MovieResume>>, Callback<MoviesResponse> {
     private final TheMovieDbRestApi service;
     private Listener<List<MovieResume>> listener;
+
 
     public CommandGetMovies(TheMovieDbRestApi service) {
 
@@ -28,14 +30,9 @@ public class CommandGetMovies extends Command<List<MovieResume>> implements Call
     }
 
     @Override
-    public List<MovieResume> returnValue() {
-        return null;
-    }
-
-    @Override
     public void run() throws IllegalArgumentException {
-        if(service == null) {
-            throw new IllegalArgumentException("An instance of TheMovieDbRestApi class is required");
+        if (service == null || listener == null) {
+            throw new IllegalArgumentException("An instance of TheMovieDbRestApi and an instance of Command.Listener are required");
         }
 
         Call<MoviesResponse> caller = service.getMovies(Constants.MOST_POPULAR_MOVIES, Constants.API_KEY);
@@ -49,7 +46,21 @@ public class CommandGetMovies extends Command<List<MovieResume>> implements Call
 
     @Override
     public void onResponse(@NonNull Call<MoviesResponse> call, @NonNull Response<MoviesResponse> response) {
-        listener.recieveValue(response.body().results);
+        if (listener != null) {
+            if (response.isSuccessful()) {
+                MoviesResponse moviesResponse = response.body();
+
+                if (moviesResponse != null) {
+                    listener.receiveValue(moviesResponse.results);
+                } else {
+                    listener.notifyError(ApiStatus.NO_RESULT);
+                }
+
+            } else if (response.code() == 500) {
+                listener.notifyError(ApiStatus.SERVER_ERROR);
+            }
+
+        }
     }
 
     @Override

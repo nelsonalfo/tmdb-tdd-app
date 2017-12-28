@@ -3,22 +3,26 @@ package nelsonalfo.tmdbunittestsapp.command.detail;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 
 import java.util.Collections;
 import java.util.List;
 
+import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
 import nelsonalfo.tmdbunittestsapp.command.Command;
 import nelsonalfo.tmdbunittestsapp.models.Constants;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 import nelsonalfo.tmdbunittestsapp.models.MoviesResponse;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -34,6 +38,8 @@ public class CommandGetMoviesTest {
     private Call<MoviesResponse> caller;
     @Mock
     private Command.Listener<List<MovieResume>> listener;
+    @Mock
+    private ResponseBody errorBody;
 
     private CommandGetMovies command;
 
@@ -46,10 +52,11 @@ public class CommandGetMoviesTest {
         initMocks(this);
 
         command = new CommandGetMovies(service);
+        command.setListener(listener);
     }
 
     @Test
-    public void run_serviceIsSet_callGetMoviesApi() throws Exception {
+    public void run_serviceIsSetAndListenerIsSet_callGetMoviesApi() throws Exception {
         when(service.getMovies(anyString(), anyString())).thenReturn(caller);
 
         command.run();
@@ -65,7 +72,18 @@ public class CommandGetMoviesTest {
         try {
             command.run();
         } catch (IllegalArgumentException ex) {
-            assertThat(ex).hasMessageThat().isEqualTo("An instance of TheMovieDbRestApi class is required");
+            assertThat(ex).hasMessageThat().isEqualTo("An instance of TheMovieDbRestApi and an instance of Command.Listener are required");
+        }
+    }
+
+    @Test
+    public void run_listenerIsNull_throwAnException() throws Exception {
+        command.setListener(null);
+
+        try {
+            command.run();
+        } catch (IllegalArgumentException ex) {
+            assertThat(ex).hasMessageThat().isEqualTo("An instance of TheMovieDbRestApi and an instance of Command.Listener are required");
         }
     }
 
@@ -74,21 +92,46 @@ public class CommandGetMoviesTest {
         MoviesResponse body = new MoviesResponse();
         body.results = Collections.singletonList(new MovieResume());
         Response<MoviesResponse> response = Response.success(body);
-        command.setListener(listener);
 
         command.onResponse(caller, response);
 
-        verify(listener).recieveValue(eq(body.results));
+        verify(listener).receiveValue(eq(body.results));
     }
 
     @Test
-    public void onResponse_theApiReturnAResponseButThereIsNoMovies_returnNull() throws Exception {
-        //TODO
+    public void onResponse_theResponseIsNull_notifyAnError() throws Exception {
+        Response<MoviesResponse> response = Response.success(null);
+
+        command.onResponse(caller, response);
+
+        verify(listener, never()).receiveValue(ArgumentMatchers.<MovieResume>anyList());
+        verify(listener).notifyError(eq(ApiStatus.NO_RESULT));
+    }
+
+    @Test
+    public void onResponse_listenerNotSet_doNothing() throws Exception {
+        Response<MoviesResponse> response = Response.success(new MoviesResponse());
+
+        command.setListener(null);
+        command.onResponse(caller, response);
+
+        verify(listener, never()).receiveValue(ArgumentMatchers.<MovieResume>anyList());
+        verify(listener, never()).notifyError(anyString());
+    }
+
+    @Test
+    public void onResponse_theApiReturnAnServerError_notifyTheError() throws Exception {
+        Response<MoviesResponse> errorResponse = Response.error(500, errorBody);
+
+        command.onResponse(caller, errorResponse);
+
+        verify(listener, never()).receiveValue(ArgumentMatchers.<MovieResume>anyList());
+        verify(listener).notifyError(eq(ApiStatus.SERVER_ERROR));
     }
 
     @Test
     @Ignore
-    public void returnValue() throws Exception {
-        //TODO
+    public void onResponse_theApiReturnAnClientError_() throws Exception {
+
     }
 }
