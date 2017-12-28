@@ -11,6 +11,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nelsonalfo.tmdbunittestsapp.R;
+import nelsonalfo.tmdbunittestsapp.api.ApiServiceGenerator;
+import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
+import nelsonalfo.tmdbunittestsapp.command.Command;
+import nelsonalfo.tmdbunittestsapp.command.CommandFactory;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 
 
@@ -29,6 +33,13 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
+
+        TheMovieDbRestApi service = ApiServiceGenerator.createClient();
+        Command<List<MovieResume>> command = CommandFactory.createCommandGetMovies(service);
+
+        setPresenter(new MovieListPresenter(this, command));
+
+        presenter.callApi();
     }
 
     @Override
@@ -43,11 +54,13 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
 
     @Override
     public void showMovies(List<MovieResume> movies) {
-        //TODO Llamar al adapter del recyclerView para llenarlo de peliculas
+        Toast.makeText(this, "Me llegaron las peliculas - size = " + movies.size(), Toast.LENGTH_SHORT).show();
+        //TODO
     }
 
     @Override
     public void showThereIsNoMovies() {
+        Toast.makeText(this, "showThereIsNoMovies", Toast.LENGTH_SHORT).show();
         //TODO Puedo o llamar un toast, o mostrar un texto en pantalla indicando que no hay valores
     }
 
