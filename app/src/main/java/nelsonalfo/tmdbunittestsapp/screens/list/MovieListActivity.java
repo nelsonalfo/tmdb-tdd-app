@@ -45,4 +45,19 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
     public void showMovies(List<MovieResume> movies) {
         //TODO Llamar al adapter del recyclerView para llenarlo de peliculas
     }
+
+    @Override
+    public void showThereIsNoMovies() {
+        //TODO Puedo o llamar un toast, o mostrar un texto en pantalla indicando que no hay valores
+    }
+
+    @Override
+    public void showConnectionProblemsMessage() {
+        Toast.makeText(this, "hay problemas de conexion, no se `pudieron obtener las peliculas", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showUnknownErrorMessage() {
+        Toast.makeText(this, "Hubo un error desconocido", Toast.LENGTH_SHORT).show();
+    }
 }

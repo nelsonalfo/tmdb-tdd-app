@@ -16,6 +16,12 @@ public interface MovieListContract {
         void showCantRequestTheMoviesMessage();
 
         void showMovies(List<MovieResume> movies);
+
+        void showThereIsNoMovies();
+
+        void showConnectionProblemsMessage();
+
+        void showUnknownErrorMessage();
     }
 
     interface Presenter {
