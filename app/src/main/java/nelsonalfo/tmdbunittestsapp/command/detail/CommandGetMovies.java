@@ -18,7 +18,7 @@ import retrofit2.Response;
  * Created by nelso on 27/12/2017.
  */
 
-public class CommandGetMovies extends Command<List<MovieResume>> implements Callback<MoviesResponse> {
+public class CommandGetMovies implements Command<List<MovieResume>>, Callback<MoviesResponse> {
     private final TheMovieDbRestApi service;
     private Listener<List<MovieResume>> listener;
 
@@ -57,7 +57,7 @@ public class CommandGetMovies extends Command<List<MovieResume>> implements Call
 
     @Override
     public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable ex) {
-        if(listener != null) {
+        if (listener != null) {
             listener.onError();
         }
     }
