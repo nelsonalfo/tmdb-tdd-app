@@ -5,7 +5,13 @@ package nelsonalfo.tmdbunittestsapp.command;
  */
 
 public abstract class Command<T> {
-    public abstract T returnValue();
-
     public abstract void run();
+
+    public abstract void setListener(Listener<T> listener);
+
+    public interface Listener<T> {
+        void onReturnValue(T value);
+
+        void onError();
+    }
 }

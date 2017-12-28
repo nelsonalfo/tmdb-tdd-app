@@ -1,5 +1,7 @@
 package nelsonalfo.tmdbunittestsapp.command.detail;
 
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
@@ -18,6 +20,7 @@ import retrofit2.Response;
 
 public class CommandGetMovies extends Command<List<MovieResume>> implements Callback<MoviesResponse> {
     private final TheMovieDbRestApi service;
+    private Listener<List<MovieResume>> listener;
 
     public CommandGetMovies(TheMovieDbRestApi service) {
 
@@ -25,13 +28,8 @@ public class CommandGetMovies extends Command<List<MovieResume>> implements Call
     }
 
     @Override
-    public List<MovieResume> returnValue() {
-        return null;
-    }
-
-    @Override
     public void run() throws IllegalArgumentException {
-        if(service == null) {
+        if (service == null) {
             throw new IllegalArgumentException("An instance of TheMovieDbRestApi class is required");
         }
 
@@ -40,12 +38,27 @@ public class CommandGetMovies extends Command<List<MovieResume>> implements Call
     }
 
     @Override
-    public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-
+    public void setListener(Listener<List<MovieResume>> listener) {
+        this.listener = listener;
     }
 
     @Override
-    public void onFailure(Call<MoviesResponse> call, Throwable t) {
+    public void onResponse(@NonNull Call<MoviesResponse> call, @NonNull Response<MoviesResponse> response) {
+        if (listener != null) {
+            final MoviesResponse body = response.body();
 
+            if (response.isSuccessful() && body != null) {
+                listener.onReturnValue(body.results);
+            } else {
+                listener.onError();
+            }
+        }
+    }
+
+    @Override
+    public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable ex) {
+        if(listener != null) {
+            listener.onError();
+        }
     }
 }
