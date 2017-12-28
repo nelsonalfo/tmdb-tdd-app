@@ -48,18 +48,28 @@ public class CommandGetMovies implements Command<List<MovieResume>>, Callback<Mo
     public void onResponse(@NonNull Call<MoviesResponse> call, @NonNull Response<MoviesResponse> response) {
         if (listener != null) {
             if (response.isSuccessful()) {
-                MoviesResponse moviesResponse = response.body();
-
-                if (moviesResponse != null) {
-                    listener.receiveValue(moviesResponse.results);
-                } else {
-                    listener.notifyError(ApiStatus.NO_RESULT);
-                }
-
-            } else if (response.code() == 500) {
-                listener.notifyError(ApiStatus.SERVER_ERROR);
+                handleSuccess(response);
+            } else {
+                handleError(response);
             }
+        }
+    }
 
+    private void handleSuccess(@NonNull Response<MoviesResponse> response) {
+        MoviesResponse moviesResponse = response.body();
+
+        if (moviesResponse != null) {
+            listener.receiveValue(moviesResponse.results);
+        } else {
+            listener.notifyError(ApiStatus.NO_RESULT);
+        }
+    }
+
+    private void handleError(@NonNull Response<MoviesResponse> response) {
+        switch (response.code()) {
+            case ApiStatus.Code.SERVER_ERROR:
+                listener.notifyError(ApiStatus.SERVER_ERROR);
+                break;
         }
     }
 

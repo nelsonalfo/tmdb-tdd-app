@@ -7,4 +7,8 @@ package nelsonalfo.tmdbunittestsapp.api;
 public interface ApiStatus {
     String NO_RESULT = "NO_RESULT";
     String SERVER_ERROR = "SERVER_ERROR";
+
+    interface Code {
+        int SERVER_ERROR = 500;
+    }
 }
