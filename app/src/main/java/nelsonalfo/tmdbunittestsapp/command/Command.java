@@ -9,9 +9,9 @@ public interface Command<T> {
 
     void setListener(Listener<T> listener);
 
-    interface Listener<T> {
-        void onReturnValue(T value);
+    interface Listener<T>{
+        void receiveValue(T value);
 
-        void onError();
+        void notifyError(String errorStatus);
     }
 }

@@ -2,8 +2,10 @@ package nelsonalfo.tmdbunittestsapp.command.detail;
 
 import android.support.annotation.NonNull;
 
+import java.io.IOException;
 import java.util.List;
 
+import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
 import nelsonalfo.tmdbunittestsapp.command.Command;
 import nelsonalfo.tmdbunittestsapp.models.Constants;
@@ -22,6 +24,7 @@ public class CommandGetMovies implements Command<List<MovieResume>>, Callback<Mo
     private final TheMovieDbRestApi service;
     private Listener<List<MovieResume>> listener;
 
+
     public CommandGetMovies(TheMovieDbRestApi service) {
 
         this.service = service;
@@ -29,8 +32,8 @@ public class CommandGetMovies implements Command<List<MovieResume>>, Callback<Mo
 
     @Override
     public void run() throws IllegalArgumentException {
-        if (service == null) {
-            throw new IllegalArgumentException("An instance of TheMovieDbRestApi class is required");
+        if (service == null || listener == null) {
+            throw new IllegalArgumentException("An instance of TheMovieDbRestApi and an instance of Command.Listener are required");
         }
 
         Call<MoviesResponse> caller = service.getMovies(Constants.MOST_POPULAR_MOVIES, Constants.API_KEY);
@@ -45,20 +48,43 @@ public class CommandGetMovies implements Command<List<MovieResume>>, Callback<Mo
     @Override
     public void onResponse(@NonNull Call<MoviesResponse> call, @NonNull Response<MoviesResponse> response) {
         if (listener != null) {
-            final MoviesResponse body = response.body();
-
-            if (response.isSuccessful() && body != null) {
-                listener.onReturnValue(body.results);
+            if (response.isSuccessful()) {
+                handleSuccess(response);
             } else {
-                listener.onError();
+                handleError(response);
             }
+        }
+    }
+
+    private void handleSuccess(@NonNull Response<MoviesResponse> response) {
+        MoviesResponse moviesResponse = response.body();
+
+        if (moviesResponse != null) {
+            listener.receiveValue(moviesResponse.results);
+        } else {
+            listener.notifyError(ApiStatus.NO_RESULT);
+        }
+    }
+
+    private void handleError(@NonNull Response<MoviesResponse> response) {
+        switch (response.code()) {
+            case ApiStatus.Code.SERVER_ERROR:
+                listener.notifyError(ApiStatus.SERVER_ERROR);
+                break;
+            case ApiStatus.Code.CLIENT_ERROR:
+                listener.notifyError(ApiStatus.CLIENT_ERROR);
+                break;
         }
     }
 
     @Override
     public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable ex) {
-        if (listener != null) {
-            listener.onError();
+        if(listener == null) {
+            return;
+        }
+
+        if(ex instanceof IOException) {
+            listener.notifyError(ApiStatus.NETWORK_ERROR);
         }
     }
 }

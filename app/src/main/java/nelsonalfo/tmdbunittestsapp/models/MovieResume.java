@@ -53,4 +53,13 @@ public class MovieResume {
     @SerializedName("release_date")
     @Expose
     public String releaseDate;
+
+
+    public MovieResume() {
+    }
+
+    public MovieResume(Integer id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 }
