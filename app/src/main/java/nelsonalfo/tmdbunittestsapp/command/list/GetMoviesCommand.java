@@ -32,7 +32,7 @@ public class GetMoviesCommand implements Command<List<MovieResume>>, Callback<Mo
     }
 
     @Override
-    public void run() throws IllegalArgumentException {
+    public void execute() throws IllegalArgumentException {
         if (service == null || listener == null) {
             throw new IllegalArgumentException(EXCEPTION_MESSAGE);
         }

@@ -58,7 +58,7 @@ public class GetConfigurationCommandTest {
     @Test
     public void run_serviceIsSetAndListenerIsSet_callConfigurationApi() throws Exception {
 
-        command.run();
+        command.execute();
 
         verify(service).getConfiguration(eq(Constants.API_KEY));
         verify(caller).enqueue(eq(command));
@@ -69,7 +69,7 @@ public class GetConfigurationCommandTest {
         command = new GetConfigurationCommand(null);
 
         try {
-            command.run();
+            command.execute();
             Assert.fail("The method is expected to throw an IllegalArgumentException");
         }catch (IllegalArgumentException ex){
             Truth.assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_EXCEPTION_MESSAGE);
@@ -81,7 +81,7 @@ public class GetConfigurationCommandTest {
         command.setListener(null);
 
         try {
-            command.run();
+            command.execute();
             Assert.fail("The method is expected to throw an IllegalArgumentException");
         }catch (IllegalArgumentException ex){
             Truth.assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_EXCEPTION_MESSAGE);

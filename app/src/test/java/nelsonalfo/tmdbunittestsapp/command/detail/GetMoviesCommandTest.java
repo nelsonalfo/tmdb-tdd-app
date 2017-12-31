@@ -58,7 +58,7 @@ public class GetMoviesCommandTest {
     public void run_serviceIsSetAndListenerIsSet_callGetMoviesApi() throws Exception {
         when(service.getMovies(anyString(), anyString())).thenReturn(caller);
 
-        command.run();
+        command.execute();
 
         verify(service).getMovies(eq(Constants.MOST_POPULAR_MOVIES), eq(Constants.API_KEY));
         verify(caller).enqueue(eq(command));
@@ -69,7 +69,7 @@ public class GetMoviesCommandTest {
         command = new GetMoviesCommand(null);
 
         try {
-            command.run();
+            command.execute();
         } catch (IllegalArgumentException ex) {
             assertThat(ex).hasMessageThat().isEqualTo("An instance of TheMovieDbRestApi and an instance of Command.Listener are required");
         }
@@ -80,7 +80,7 @@ public class GetMoviesCommandTest {
         command.setListener(null);
 
         try {
-            command.run();
+            command.execute();
         } catch (IllegalArgumentException ex) {
             assertThat(ex).hasMessageThat().isEqualTo("An instance of TheMovieDbRestApi and an instance of Command.Listener are required");
         }

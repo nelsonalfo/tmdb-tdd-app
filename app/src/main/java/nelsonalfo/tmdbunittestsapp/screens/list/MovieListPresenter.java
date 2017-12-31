@@ -6,32 +6,38 @@ import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
 import nelsonalfo.tmdbunittestsapp.command.list.GetConfigurationCommand;
 import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
+import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
 
 
 /**
  * Created by nelso on 27/12/2017.
  */
 
-public class MovieListPresenter implements MovieListContract.Presenter, GetMoviesCommand.Listener {
+public class MovieListPresenter implements MovieListContract.Presenter, GetMoviesCommand.Listener, GetConfigurationCommand.Listener {
     private MovieListContract.View view;
-    private final GetMoviesCommand command;
+    private final GetMoviesCommand moviesCommand;
     private final GetConfigurationCommand configCommand;
 
 
     public MovieListPresenter(MovieListContract.View view, GetMoviesCommand moviesCommand, GetConfigurationCommand configCommand) {
-        this.configCommand = configCommand;
-        if (view == null || moviesCommand == null) {
-            throw new IllegalArgumentException("The params are needed");
+        if (view == null || moviesCommand == null || configCommand == null) {
+            throw new IllegalArgumentException("All the params are needed");
         }
 
         this.view = view;
-        this.command = moviesCommand;
+        this.configCommand = configCommand;
+        this.moviesCommand = moviesCommand;
     }
 
     @Override
     public void callApi() {
-        command.setListener(this);
-        command.run();
+        configCommand.setListener(this);
+        configCommand.execute();
+    }
+
+    @Override
+    public void receiveConfiguration(TmdbConfiguration configuration) {
+
     }
 
     @Override

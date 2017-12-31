@@ -29,7 +29,7 @@ public class GetConfigurationCommand implements Command<TmdbConfiguration>, Call
     }
 
     @Override
-    public void run() {
+    public void execute() {
         if(service == null || listener == null) {
             throw new IllegalArgumentException(EXCEPTION_MESSAGE);
         }

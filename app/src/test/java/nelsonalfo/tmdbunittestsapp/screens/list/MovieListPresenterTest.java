@@ -1,5 +1,7 @@
 package nelsonalfo.tmdbunittestsapp.screens.list;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +21,7 @@ import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -28,6 +31,9 @@ import static org.mockito.Mockito.verify;
  */
 @RunWith(PowerMockRunner.class)
 public class MovieListPresenterTest {
+    private static final String FAIL_EXCEPTION_MESSAGE = "Is expected to throw an IllegalArgumentException";
+    private static final String EXPECTED_EXCEPTION_MESSAGE = "All the params are needed";
+
     @Mock
     MovieListContract.View view;
     @Mock
@@ -50,18 +56,20 @@ public class MovieListPresenterTest {
     @Test
     public void createPresenter_noViewSet_throwException() throws Exception {
         try {
-            presenter = new MovieListPresenter(null, moviesCommand, null);
+            presenter = new MovieListPresenter(null, moviesCommand, configCommand);
+            Assert.fail(FAIL_EXCEPTION_MESSAGE);
         } catch (IllegalArgumentException ex) {
-            assertThat(ex).hasMessageThat().isEqualTo("The params are needed");
+            assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_EXCEPTION_MESSAGE);
         }
     }
 
     @Test
     public void createPresenter_noGetMoviesCommandSet_throwException() throws Exception {
         try {
-            presenter = new MovieListPresenter(null, moviesCommand, null);
+            presenter = new MovieListPresenter(view, null, configCommand);
+            Assert.fail(FAIL_EXCEPTION_MESSAGE);
         } catch (IllegalArgumentException ex) {
-            assertThat(ex).hasMessageThat().isEqualTo("The params are needed");
+            assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_EXCEPTION_MESSAGE);
         }
     }
 
@@ -69,8 +77,9 @@ public class MovieListPresenterTest {
     public void createPresenter_noGetConfigurationCommandSet_throwException() throws Exception {
         try {
             presenter = new MovieListPresenter(view, moviesCommand, null);
+            Assert.fail(FAIL_EXCEPTION_MESSAGE);
         } catch (IllegalArgumentException ex) {
-            assertThat(ex).hasMessageThat().isEqualTo("The params are needed");
+            assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_EXCEPTION_MESSAGE);
         }
     }
 
@@ -78,8 +87,8 @@ public class MovieListPresenterTest {
     public void callApi_configCommandIsSet_runTheCommand() throws Exception {
         presenter.callApi();
 
-        //TODO revisar como puedo puedo manejar mas de un listener dentro del presentardor y poder probarlos.
-        // Quiza la respuesta este en delegar la resposabilida a otra clase
+        verify(configCommand).setListener(eq(presenter));
+        verify(configCommand).execute();
     }
 
     @Test

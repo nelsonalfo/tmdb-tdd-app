@@ -5,7 +5,7 @@ package nelsonalfo.tmdbunittestsapp.command;
  */
 
 public interface Command<T> {
-    void run();
+    void execute();
 
     interface Listener{
         void notifyError(String errorStatus);
