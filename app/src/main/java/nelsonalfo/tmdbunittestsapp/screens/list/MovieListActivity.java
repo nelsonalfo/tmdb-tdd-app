@@ -1,5 +1,6 @@
 package nelsonalfo.tmdbunittestsapp.screens.list;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,16 +19,18 @@ import nelsonalfo.tmdbunittestsapp.command.list.GetConfigurationCommand;
 import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
+import nelsonalfo.tmdbunittestsapp.screens.detail.MovieDetailActivity;
 import nelsonalfo.tmdbunittestsapp.util.TmdbConfigurationUtil;
 
 
-public class MovieListActivity extends AppCompatActivity implements MovieListContract.View {
+public class MovieListActivity extends AppCompatActivity implements MovieListContract.View, MoviesAdapter.Listener {
     @BindView(R.id.movie_list)
     RecyclerView recyclerView;
 
     private TmdbConfigurationUtil configurationUtil;
 
     private MovieListContract.Presenter presenter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +85,18 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
     @Override
     public void showMovies(List<MovieResume> movies) {
         if(configurationUtil != null){
-            MoviesAdapter adapter = new MoviesAdapter(configurationUtil, movies);
+            final MoviesAdapter adapter = new MoviesAdapter(configurationUtil, movies);
+            adapter.setListener(this);
+
             recyclerView.setAdapter(adapter);
         }
+    }
+
+    @Override
+    public void onMovieSelected(MovieResume selectedMovie) {
+        final Intent intent = new Intent(this, MovieDetailActivity.class);
+        intent.putExtra(MovieDetailActivity.ARG_MOVIE_ID, selectedMovie.id);
+
+        startActivity(intent);
     }
 }

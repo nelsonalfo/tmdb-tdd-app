@@ -20,6 +20,8 @@ import nelsonalfo.tmdbunittestsapp.util.TmdbConfigurationUtil;
 class MoviesAdapter extends RecyclerView.Adapter<MoviesViewHolder> {
     private final TmdbConfigurationUtil configurationUtil;
     private final List<MovieResume> dataSet;
+    private Listener listener;
+
 
     public MoviesAdapter(TmdbConfigurationUtil configurationUtil, List<MovieResume> movies) {
         this.configurationUtil = configurationUtil;
@@ -36,15 +38,33 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MoviesViewHolder holder, int position) {
+    public void onBindViewHolder(final MoviesViewHolder holder, int position) {
         if (dataSet != null && !dataSet.isEmpty()) {
-            MovieResume movieResume = dataSet.get(position);
+            final MovieResume movieResume = dataSet.get(position);
             holder.bind(configurationUtil, movieResume);
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        final MovieResume selectedMovie = dataSet.get(holder.getAdapterPosition());
+                        listener.onMovieSelected(selectedMovie);
+                    }
+                }
+            });
         }
     }
 
     @Override
     public int getItemCount() {
         return dataSet != null ? dataSet.size() : 0;
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
+    public interface Listener {
+        void onMovieSelected(MovieResume selectedMovie);
     }
 }

@@ -9,6 +9,8 @@ import nelsonalfo.tmdbunittestsapp.R;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
+    public static final String ARG_MOVIE_ID = "ARG_MOVIE_ID";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
