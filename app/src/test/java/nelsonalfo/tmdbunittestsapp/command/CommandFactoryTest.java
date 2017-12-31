@@ -6,11 +6,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.List;
-
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
-import nelsonalfo.tmdbunittestsapp.models.MovieResume;
-import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
+import nelsonalfo.tmdbunittestsapp.command.detail.MovieDetailCommand;
+import nelsonalfo.tmdbunittestsapp.command.list.GetConfigurationCommand;
+import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -32,7 +31,7 @@ public class CommandFactoryTest {
 
     @Test
     public void createCommandGetMovies_theServiceIsSet_createAnInstanceOfTheCommand() throws Exception {
-        Command<List<MovieResume>> command = CommandFactory.createCommandGetMovies(service);
+        GetMoviesCommand command = CommandFactory.createGetMoviesCommand(service);
 
         assertThat(command).isNotNull();
     }
@@ -40,7 +39,7 @@ public class CommandFactoryTest {
     @Test
     public void createCommandGetMovies_theServiceIsNull_throwException() throws Exception {
         try {
-            CommandFactory.createCommandGetMovies(null);
+            CommandFactory.createGetMoviesCommand(null);
             Assert.fail("Is expected to throw an IllegalArgumentException");
         } catch (IllegalArgumentException ex) {
             assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_EXCEPTION_MESSAGE);
@@ -49,7 +48,7 @@ public class CommandFactoryTest {
 
     @Test
     public void createCommandGetConfiguration_theServiceIsSet_createAnInstanceOfTheCommand() throws Exception {
-        Command<TmdbConfiguration> command = CommandFactory.createCommandGetConfiguration(service);
+        GetConfigurationCommand command = CommandFactory.createGetConfigurationCommand(service);
 
         assertThat(command).isNotNull();
     }
@@ -57,7 +56,27 @@ public class CommandFactoryTest {
     @Test
     public void createCommandGetConfiguration_theServiceIsNull_throwException() throws Exception {
         try {
-            CommandFactory.createCommandGetConfiguration(null);
+            CommandFactory.createGetConfigurationCommand(null);
+            Assert.fail("Is expected to throw an IllegalArgumentException");
+        } catch (IllegalArgumentException ex) {
+            assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_EXCEPTION_MESSAGE);
+        }
+    }
+
+    @Test
+    public void createCommandGetMovieDetails_theServiceIsSet_createAnInstanceOfTheCommand() throws Exception {
+        int movieId = 1;
+
+        MovieDetailCommand command = CommandFactory.createGetMovieDetailCommand(service, movieId);
+
+        assertThat(command).isNotNull();
+    }
+
+    @Test
+    public void createCommandGetMovieDetails_theServiceIsNull_throwException() throws Exception {
+        int movieId = 1;
+        try {
+            CommandFactory.createGetMovieDetailCommand(null, movieId);
             Assert.fail("Is expected to throw an IllegalArgumentException");
         } catch (IllegalArgumentException ex) {
             assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_EXCEPTION_MESSAGE);

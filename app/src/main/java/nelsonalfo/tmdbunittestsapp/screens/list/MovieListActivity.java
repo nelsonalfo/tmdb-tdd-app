@@ -43,8 +43,8 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
         recyclerView.setHasFixedSize(true);
 
         final TheMovieDbRestApi service = ApiServiceGenerator.createClient();
-        final GetMoviesCommand moviesCommand = CommandFactory.createCommandGetMovies(service);
-        final GetConfigurationCommand configCommand = CommandFactory.createCommandGetConfiguration(service);
+        final GetMoviesCommand moviesCommand = CommandFactory.createGetMoviesCommand(service);
+        final GetConfigurationCommand configCommand = CommandFactory.createGetConfigurationCommand(service);
 
         setPresenter(new MovieListPresenter(this, moviesCommand, configCommand));
 

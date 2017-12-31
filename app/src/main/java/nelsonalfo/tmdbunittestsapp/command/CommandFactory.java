@@ -1,6 +1,7 @@
 package nelsonalfo.tmdbunittestsapp.command;
 
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
+import nelsonalfo.tmdbunittestsapp.command.detail.MovieDetailCommand;
 import nelsonalfo.tmdbunittestsapp.command.list.GetConfigurationCommand;
 import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 
@@ -18,13 +19,18 @@ public class CommandFactory {
     }
 
 
-    public static GetMoviesCommand createCommandGetMovies(TheMovieDbRestApi service) {
+    public static GetMoviesCommand createGetMoviesCommand(TheMovieDbRestApi service) {
         if (service == null) throw new IllegalArgumentException(EXCEPTION_MESSAGE);
         return new GetMoviesCommand(service);
     }
 
-    public static GetConfigurationCommand createCommandGetConfiguration(TheMovieDbRestApi service) {
+    public static GetConfigurationCommand createGetConfigurationCommand(TheMovieDbRestApi service) {
         if (service == null) throw new IllegalArgumentException(EXCEPTION_MESSAGE);
         return new GetConfigurationCommand(service);
+    }
+
+    public static MovieDetailCommand createGetMovieDetailCommand(TheMovieDbRestApi service, int movieId) {
+        if (service == null) throw new IllegalArgumentException(EXCEPTION_MESSAGE);
+        return new MovieDetailCommand(service, movieId);
     }
 }
