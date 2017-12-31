@@ -1,43 +1,41 @@
-package nelsonalfo.tmdbunittestsapp.command.list;
+package nelsonalfo.tmdbunittestsapp.command.detail;
 
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
-import java.util.List;
 
 import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
 import nelsonalfo.tmdbunittestsapp.command.Command;
 import nelsonalfo.tmdbunittestsapp.models.Constants;
-import nelsonalfo.tmdbunittestsapp.models.MovieResume;
-import nelsonalfo.tmdbunittestsapp.models.MoviesResponse;
+import nelsonalfo.tmdbunittestsapp.models.MovieDetail;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
 /**
- * Created by nelso on 27/12/2017.
+ * Created by nelso on 31/12/2017.
  */
-
-public class GetMoviesCommand implements Command<List<MovieResume>>, Callback<MoviesResponse> {
-    private static final String EXCEPTION_MESSAGE = "An instance of TheMovieDbRestApi and an instance of GetMoviesCommand.Listener are required";
+public class MovieDetailCommand implements Command, Callback<MovieDetail> {
+    private static final String EXCEPTION_MESSAGE = "An instance of TheMovieDbRestApi and an instance of MovieDetailCommand.Listener are required";
 
     private final TheMovieDbRestApi service;
+    private final int movieId;
     private Listener listener;
 
-
-    public GetMoviesCommand(TheMovieDbRestApi service) {
+    public MovieDetailCommand(TheMovieDbRestApi service, int movieId) {
         this.service = service;
+        this.movieId = movieId;
     }
 
     @Override
-    public void execute() throws IllegalArgumentException {
+    public void execute() {
         if (service == null || listener == null) {
             throw new IllegalArgumentException(EXCEPTION_MESSAGE);
         }
 
-        service.getMovies(Constants.MOST_POPULAR_MOVIES, Constants.API_KEY).enqueue(this);
+        service.getMovieDetail(movieId, Constants.API_KEY).enqueue(this);
     }
 
     public void setListener(Listener listener) {
@@ -45,7 +43,7 @@ public class GetMoviesCommand implements Command<List<MovieResume>>, Callback<Mo
     }
 
     @Override
-    public void onResponse(@NonNull Call<MoviesResponse> call, @NonNull Response<MoviesResponse> response) {
+    public void onResponse(@NonNull Call<MovieDetail> call, @NonNull Response<MovieDetail> response) {
         if (listener != null) {
             if (response.isSuccessful()) {
                 handleSuccess(response);
@@ -55,17 +53,17 @@ public class GetMoviesCommand implements Command<List<MovieResume>>, Callback<Mo
         }
     }
 
-    private void handleSuccess(@NonNull Response<MoviesResponse> response) {
-        MoviesResponse moviesResponse = response.body();
+    private void handleSuccess(@NonNull Response<MovieDetail> response) {
+        MovieDetail movieDetail = response.body();
 
-        if (moviesResponse != null) {
-            listener.receiveMovies(moviesResponse.results);
+        if (movieDetail != null) {
+            listener.receiveMovieDetail(movieDetail);
         } else {
             listener.notifyError(ApiStatus.NO_RESULT);
         }
     }
 
-    private void handleError(@NonNull Response<MoviesResponse> response) {
+    private void handleError(@NonNull Response<MovieDetail> response) {
         switch (response.code()) {
             case ApiStatus.Code.SERVER_ERROR:
                 listener.notifyError(ApiStatus.SERVER_ERROR);
@@ -77,7 +75,7 @@ public class GetMoviesCommand implements Command<List<MovieResume>>, Callback<Mo
     }
 
     @Override
-    public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable ex) {
+    public void onFailure(@NonNull Call<MovieDetail> call, @NonNull Throwable ex) {
         if (listener == null) {
             return;
         }
@@ -88,6 +86,6 @@ public class GetMoviesCommand implements Command<List<MovieResume>>, Callback<Mo
     }
 
     public interface Listener extends Command.Listener {
-        void receiveMovies(List<MovieResume> listener);
+        void receiveMovieDetail(MovieDetail movieDetail);
     }
 }

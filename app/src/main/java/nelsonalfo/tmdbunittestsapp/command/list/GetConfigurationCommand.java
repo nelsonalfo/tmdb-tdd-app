@@ -18,7 +18,7 @@ import retrofit2.Response;
  * Created by nelso on 30/12/2017.
  */
 public class GetConfigurationCommand implements Command<TmdbConfiguration>, Callback<TmdbConfiguration> {
-    private static final String EXCEPTION_MESSAGE = "An instance of TheMovieDbRestApi and an instance of Command.Listener are required";
+    private static final String EXCEPTION_MESSAGE = "An instance of TheMovieDbRestApi and an instance of GetConfigurationCommand.Listener are required";
 
     private final TheMovieDbRestApi service;
     private Listener listener;

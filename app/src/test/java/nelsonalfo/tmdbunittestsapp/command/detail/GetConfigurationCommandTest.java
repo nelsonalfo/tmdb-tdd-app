@@ -31,10 +31,10 @@ import static org.mockito.MockitoAnnotations.initMocks;
  * Created by nelso on 30/12/2017.
  */
 public class GetConfigurationCommandTest {
-    private static final String EXPECTED_EXCEPTION_MESSAGE = "An instance of TheMovieDbRestApi and an instance of Command.Listener are required";
+    private static final String EXPECTED_EXCEPTION_MESSAGE = "An instance of TheMovieDbRestApi and an instance of GetConfigurationCommand.Listener are required";
 
     @Mock
-    TheMovieDbRestApi service;
+    private TheMovieDbRestApi service;
     @Mock
     private Call<TmdbConfiguration> caller;
     @Mock
@@ -71,7 +71,7 @@ public class GetConfigurationCommandTest {
         try {
             command.execute();
             Assert.fail("The method is expected to throw an IllegalArgumentException");
-        }catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException ex) {
             Truth.assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_EXCEPTION_MESSAGE);
         }
     }
@@ -83,7 +83,7 @@ public class GetConfigurationCommandTest {
         try {
             command.execute();
             Assert.fail("The method is expected to throw an IllegalArgumentException");
-        }catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException ex) {
             Truth.assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_EXCEPTION_MESSAGE);
         }
     }
