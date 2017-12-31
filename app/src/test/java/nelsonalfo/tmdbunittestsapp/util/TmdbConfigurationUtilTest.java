@@ -48,17 +48,17 @@ public class TmdbConfigurationUtilTest {
     }
 
     @Test
-    public void getPosterImageUrl_partialPosterImageUrlIsSet_returnTheCompleteUrl() throws Exception {
+    public void getPosterImageUrl_posterPathIsSet_returnImageUrl() throws Exception {
         String expectedImageUrl = "http://image.tmdb.org/t/p/w92//adw6Lq9FiC9zjYEpOqfq03ituwp.jpg";
-        String partialUrl = "/adw6Lq9FiC9zjYEpOqfq03ituwp.jpg";
+        String posterPath = "/adw6Lq9FiC9zjYEpOqfq03ituwp.jpg";
 
-        String imageUrl = configurationUtil.getPosterImageUrl(partialUrl);
+        String imageUrl = configurationUtil.getPosterImageUrl(posterPath);
 
         assertThat(imageUrl).isEqualTo(expectedImageUrl);
     }
 
     @Test
-    public void getPosterImageUrl_partialPosterImageUrlIsNull_throwException() throws Exception {
+    public void getPosterImageUrl_posterPathIsNull_throwException() throws Exception {
         try {
             configurationUtil.getPosterImageUrl(null);
             Assert.fail(FAIL_EXCEPTION_MESSAGE);
@@ -68,7 +68,7 @@ public class TmdbConfigurationUtilTest {
     }
 
     @Test
-    public void getPosterImageUrl_partialPosterImageUrlIsEmpty_throwException() throws Exception {
+    public void getPosterImageUrl_posterPathIsEmpty_throwException() throws Exception {
         try {
             configurationUtil.getPosterImageUrl("");
             Assert.fail(FAIL_EXCEPTION_MESSAGE);
@@ -91,7 +91,7 @@ public class TmdbConfigurationUtilTest {
     }
 
     @Test
-    public void getPosterImageUrl_posterInfoInConfigurationIsEmpty_throwException() throws Exception {
+    public void getPosterImageUrl_posterSizesInConfigurationIsEmpty_throwException() throws Exception {
         String partialUrl = "/adw6Lq9FiC9zjYEpOqfq03ituwp.jpg";
         configuration.images.posterSizes = new ArrayList<>();
 
@@ -136,6 +136,101 @@ public class TmdbConfigurationUtilTest {
 
         try {
             configurationUtil.getPosterImageUrl(partialUrl);
+            Assert.fail(FAIL_EXCEPTION_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            assertThat(ex).hasMessageThat().isEqualTo("The configuration dont have images information");
+        }
+    }
+
+    @Test
+    public void getBackdropImageUrl_backdropPathIsSet_returnImageUrl() throws Exception {
+        String expectedImageUrl = "http://image.tmdb.org/t/p/w500//8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg";
+        String backdropPath = "/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg";
+
+        String imageUrl = configurationUtil.getBackdropImageUrl(backdropPath);
+
+        assertThat(imageUrl).isEqualTo(expectedImageUrl);
+    }
+
+    @Test
+    public void getBackdropImageUrl_backdropPathIsNull_throwException() throws Exception {
+        try {
+            configurationUtil.getBackdropImageUrl(null);
+            Assert.fail(FAIL_EXCEPTION_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_GET_IMAGE_EXCEPTION_MESSAGE);
+        }
+    }
+
+    @Test
+    public void getBackdropImageUrl_backdropPathIsEmpty_throwException() throws Exception {
+        try {
+            configurationUtil.getBackdropImageUrl("");
+            Assert.fail(FAIL_EXCEPTION_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_GET_IMAGE_EXCEPTION_MESSAGE);
+        }
+    }
+
+    @Test
+    public void getBackdropImageUrl_backdropSizesInConfigurationIsNull_throwException() throws Exception {
+        String backdropPath = "/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg";
+        configuration.images.backdropSizes = null;
+
+        try {
+            configurationUtil.getBackdropImageUrl(backdropPath);
+            Assert.fail(FAIL_EXCEPTION_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            assertThat(ex).hasMessageThat().isEqualTo("The configuration dont have backdrop sizes");
+        }
+    }
+
+    @Test
+    public void getBackdropImageUrl_backdropSizesInConfigurationIsEmpty_throwException() throws Exception {
+        String backdropPath = "/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg";
+        configuration.images.backdropSizes = new ArrayList<>();
+
+        try {
+            configurationUtil.getBackdropImageUrl(backdropPath);
+            Assert.fail(FAIL_EXCEPTION_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            assertThat(ex).hasMessageThat().isEqualTo("The configuration dont have backdrop sizes");
+        }
+    }
+
+    @Test
+    public void getBackdropImageUrl_baseUrlInConfigurationIsNull_throwException() throws Exception {
+        String backdropPath = "/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg";
+        configuration.images.baseUrl = null;
+
+        try {
+            configurationUtil.getBackdropImageUrl(backdropPath);
+            Assert.fail(FAIL_EXCEPTION_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            assertThat(ex).hasMessageThat().isEqualTo("The configuration dont have base url");
+        }
+    }
+
+    @Test
+    public void getBackdropImageUrl_baseUrlInConfigurationIsEmpty_throwException() throws Exception {
+        String backdropPath = "/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg";
+        configuration.images.baseUrl = "";
+
+        try {
+            configurationUtil.getBackdropImageUrl(backdropPath);
+            Assert.fail(FAIL_EXCEPTION_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            assertThat(ex).hasMessageThat().isEqualTo("The configuration dont have base url");
+        }
+    }
+
+    @Test
+    public void getBackdropImageUrl_imageInfoInConfigurationIsNull_throwException() throws Exception {
+        String backdropPath = "/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg";
+        configuration.images = null;
+
+        try {
+            configurationUtil.getBackdropImageUrl(backdropPath);
             Assert.fail(FAIL_EXCEPTION_MESSAGE);
         } catch (IllegalArgumentException ex) {
             assertThat(ex).hasMessageThat().isEqualTo("The configuration dont have images information");
