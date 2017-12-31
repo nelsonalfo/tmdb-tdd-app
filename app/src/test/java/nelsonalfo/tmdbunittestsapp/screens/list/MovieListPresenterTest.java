@@ -22,6 +22,7 @@ import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -100,13 +101,23 @@ public class MovieListPresenterTest {
     }
 
     @Test
-    public void receiveConfiguration_configurationReturned_callGetMoviesCommandAndReturnConfigToView() throws Exception {
+    public void receiveConfiguration_configurationReturned_callGetMoviesCommandAndSetConfigurationInView() throws Exception {
         TmdbConfiguration configuration = new TmdbConfiguration();
 
         presenter.receiveConfiguration(configuration);
 
         verify(view).setConfiguration(eq(configuration));
         verify(moviesCommand).execute();
+    }
+
+    @Test
+    public void receiveConfiguration_configurationIsNull_showNoMoviesMessage() throws Exception {
+
+        presenter.receiveConfiguration(null);
+
+        verify(view).showThereIsNoMovies();
+        verify(view, never()).setConfiguration(any(TmdbConfiguration.class));
+        verify(moviesCommand, never()).execute();
     }
 
     @Test

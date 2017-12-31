@@ -41,8 +41,12 @@ public class MovieListPresenter implements MovieListContract.Presenter, GetMovie
 
     @Override
     public void receiveConfiguration(TmdbConfiguration configuration) {
-        view.setConfiguration(configuration);
-        moviesCommand.execute();
+        if(configuration!= null) {
+            view.setConfiguration(configuration);
+            moviesCommand.execute();
+        }else{
+            view.showThereIsNoMovies();
+        }
     }
 
     @Override
