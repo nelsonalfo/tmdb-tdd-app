@@ -3,7 +3,8 @@ package nelsonalfo.tmdbunittestsapp.screens.list;
 import java.util.List;
 
 import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
-import nelsonalfo.tmdbunittestsapp.command.Command;
+import nelsonalfo.tmdbunittestsapp.command.list.GetConfigurationCommand;
+import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 
 
@@ -11,18 +12,20 @@ import nelsonalfo.tmdbunittestsapp.models.MovieResume;
  * Created by nelso on 27/12/2017.
  */
 
-public class MovieListPresenter implements MovieListContract.Presenter, Command.Listener<List<MovieResume>> {
+public class MovieListPresenter implements MovieListContract.Presenter, GetMoviesCommand.Listener {
     private MovieListContract.View view;
-    private Command<List<MovieResume>> command;
+    private final GetMoviesCommand command;
+    private final GetConfigurationCommand configCommand;
 
 
-    public MovieListPresenter(MovieListContract.View view, Command<List<MovieResume>> command) {
-        if (view == null || command == null) {
+    public MovieListPresenter(MovieListContract.View view, GetMoviesCommand moviesCommand, GetConfigurationCommand configCommand) {
+        this.configCommand = configCommand;
+        if (view == null || moviesCommand == null) {
             throw new IllegalArgumentException("The params are needed");
         }
 
         this.view = view;
-        this.command = command;
+        this.command = moviesCommand;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class MovieListPresenter implements MovieListContract.Presenter, Command.
     }
 
     @Override
-    public void receiveValue(List<MovieResume> movies) {
+    public void receiveMovies(List<MovieResume> movies) {
         if (movies != null && !movies.isEmpty()) {
             view.showMovies(movies);
         } else {

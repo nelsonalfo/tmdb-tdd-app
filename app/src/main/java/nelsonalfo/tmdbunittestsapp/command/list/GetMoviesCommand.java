@@ -1,49 +1,51 @@
-package nelsonalfo.tmdbunittestsapp.command.detail;
+package nelsonalfo.tmdbunittestsapp.command.list;
 
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
+import java.util.List;
 
 import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
 import nelsonalfo.tmdbunittestsapp.command.Command;
 import nelsonalfo.tmdbunittestsapp.models.Constants;
-import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
+import nelsonalfo.tmdbunittestsapp.models.MovieResume;
+import nelsonalfo.tmdbunittestsapp.models.MoviesResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
 /**
- * Created by nelso on 30/12/2017.
+ * Created by nelso on 27/12/2017.
  */
-public class CommandGetConfiguration implements Command<TmdbConfiguration>, Callback<TmdbConfiguration> {
+
+public class GetMoviesCommand implements Command<List<MovieResume>>, Callback<MoviesResponse> {
     private static final String EXCEPTION_MESSAGE = "An instance of TheMovieDbRestApi and an instance of Command.Listener are required";
 
     private final TheMovieDbRestApi service;
-    private Listener<TmdbConfiguration> listener;
+    private Listener listener;
 
 
-    public CommandGetConfiguration(TheMovieDbRestApi service) {
+    public GetMoviesCommand(TheMovieDbRestApi service) {
         this.service = service;
     }
 
     @Override
-    public void run() {
-        if(service == null || listener == null) {
+    public void run() throws IllegalArgumentException {
+        if (service == null || listener == null) {
             throw new IllegalArgumentException(EXCEPTION_MESSAGE);
         }
 
-        service.getConfiguration(Constants.API_KEY).enqueue(this);
+        service.getMovies(Constants.MOST_POPULAR_MOVIES, Constants.API_KEY).enqueue(this);
     }
 
-    @Override
-    public void setListener(Listener<TmdbConfiguration> listener) {
+    public void setListener(Listener listener) {
         this.listener = listener;
     }
 
     @Override
-    public void onResponse(@NonNull Call<TmdbConfiguration> call, @NonNull Response<TmdbConfiguration> response) {
+    public void onResponse(@NonNull Call<MoviesResponse> call, @NonNull Response<MoviesResponse> response) {
         if (listener != null) {
             if (response.isSuccessful()) {
                 handleSuccess(response);
@@ -53,17 +55,17 @@ public class CommandGetConfiguration implements Command<TmdbConfiguration>, Call
         }
     }
 
-    private void handleSuccess(@NonNull Response<TmdbConfiguration> response) {
-        TmdbConfiguration configuration = response.body();
+    private void handleSuccess(@NonNull Response<MoviesResponse> response) {
+        MoviesResponse moviesResponse = response.body();
 
-        if (configuration != null) {
-            listener.receiveValue(configuration);
+        if (moviesResponse != null) {
+            listener.receiveMovies(moviesResponse.results);
         } else {
             listener.notifyError(ApiStatus.NO_RESULT);
         }
     }
 
-    private void handleError(@NonNull Response<TmdbConfiguration> response) {
+    private void handleError(@NonNull Response<MoviesResponse> response) {
         switch (response.code()) {
             case ApiStatus.Code.SERVER_ERROR:
                 listener.notifyError(ApiStatus.SERVER_ERROR);
@@ -75,7 +77,7 @@ public class CommandGetConfiguration implements Command<TmdbConfiguration>, Call
     }
 
     @Override
-    public void onFailure(@NonNull Call<TmdbConfiguration> call, @NonNull Throwable ex) {
+    public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable ex) {
         if (listener == null) {
             return;
         }
@@ -83,5 +85,9 @@ public class CommandGetConfiguration implements Command<TmdbConfiguration>, Call
         if (ex instanceof IOException) {
             listener.notifyError(ApiStatus.NETWORK_ERROR);
         }
+    }
+
+    public interface Listener extends Command.Listener {
+        void receiveMovies(List<MovieResume> listener);
     }
 }

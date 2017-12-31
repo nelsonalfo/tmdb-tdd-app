@@ -13,8 +13,8 @@ import butterknife.ButterKnife;
 import nelsonalfo.tmdbunittestsapp.R;
 import nelsonalfo.tmdbunittestsapp.api.ApiServiceGenerator;
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
-import nelsonalfo.tmdbunittestsapp.command.Command;
 import nelsonalfo.tmdbunittestsapp.command.CommandFactory;
+import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 
 
@@ -35,9 +35,9 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
         recyclerView.setHasFixedSize(true);
 
         TheMovieDbRestApi service = ApiServiceGenerator.createClient();
-        Command<List<MovieResume>> command = CommandFactory.createCommandGetMovies(service);
+        GetMoviesCommand command = CommandFactory.createCommandGetMovies(service);
 
-        setPresenter(new MovieListPresenter(this, command));
+        setPresenter(new MovieListPresenter(this, command, null));
 
         presenter.callApi();
     }

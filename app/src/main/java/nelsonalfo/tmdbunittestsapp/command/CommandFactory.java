@@ -1,12 +1,8 @@
 package nelsonalfo.tmdbunittestsapp.command;
 
-import java.util.List;
-
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
-import nelsonalfo.tmdbunittestsapp.command.detail.CommandGetConfiguration;
-import nelsonalfo.tmdbunittestsapp.command.detail.CommandGetMovies;
-import nelsonalfo.tmdbunittestsapp.models.MovieResume;
-import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
+import nelsonalfo.tmdbunittestsapp.command.list.GetConfigurationCommand;
+import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 
 
 /**
@@ -22,13 +18,13 @@ public class CommandFactory {
     }
 
 
-    public static Command<List<MovieResume>> createCommandGetMovies(TheMovieDbRestApi service) {
+    public static GetMoviesCommand createCommandGetMovies(TheMovieDbRestApi service) {
         if (service == null) throw new IllegalArgumentException(EXCEPTION_MESSAGE);
-        return new CommandGetMovies(service);
+        return new GetMoviesCommand(service);
     }
 
-    public static Command<TmdbConfiguration> createCommandGetConfiguration(TheMovieDbRestApi service) {
+    public static GetConfigurationCommand createCommandGetConfiguration(TheMovieDbRestApi service) {
         if (service == null) throw new IllegalArgumentException(EXCEPTION_MESSAGE);
-        return new CommandGetConfiguration(service);
+        return new GetConfigurationCommand(service);
     }
 }

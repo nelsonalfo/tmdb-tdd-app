@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
-import nelsonalfo.tmdbunittestsapp.command.Command;
+import nelsonalfo.tmdbunittestsapp.command.list.GetConfigurationCommand;
 import nelsonalfo.tmdbunittestsapp.models.Constants;
 import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
 import okhttp3.ResponseBody;
@@ -30,7 +30,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 /**
  * Created by nelso on 30/12/2017.
  */
-public class CommandGetConfigurationTest {
+public class GetConfigurationCommandTest {
     private static final String EXPECTED_EXCEPTION_MESSAGE = "An instance of TheMovieDbRestApi and an instance of Command.Listener are required";
 
     @Mock
@@ -38,11 +38,11 @@ public class CommandGetConfigurationTest {
     @Mock
     private Call<TmdbConfiguration> caller;
     @Mock
-    private Command.Listener<TmdbConfiguration> listener;
+    private GetConfigurationCommand.Listener listener;
     @Mock
     private ResponseBody errorBody;
 
-    private CommandGetConfiguration command;
+    private GetConfigurationCommand command;
 
 
     @Before
@@ -51,7 +51,7 @@ public class CommandGetConfigurationTest {
 
         when(service.getConfiguration(anyString())).thenReturn(caller);
 
-        command = new CommandGetConfiguration(service);
+        command = new GetConfigurationCommand(service);
         command.setListener(listener);
     }
 
@@ -66,7 +66,7 @@ public class CommandGetConfigurationTest {
 
     @Test
     public void run_serviceNotSet_throwException() throws Exception {
-        command = new CommandGetConfiguration(null);
+        command = new GetConfigurationCommand(null);
 
         try {
             command.run();
@@ -95,7 +95,7 @@ public class CommandGetConfigurationTest {
 
         command.onResponse(caller, response);
 
-        verify(listener).receiveValue(eq(configuration));
+        verify(listener).receiveConfiguration(eq(configuration));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class CommandGetConfigurationTest {
 
         command.onResponse(caller, response);
 
-        verify(listener, never()).receiveValue(any(TmdbConfiguration.class));
+        verify(listener, never()).receiveConfiguration(any(TmdbConfiguration.class));
         verify(listener).notifyError(eq(ApiStatus.NO_RESULT));
     }
 
@@ -115,7 +115,7 @@ public class CommandGetConfigurationTest {
         command.setListener(null);
         command.onResponse(caller, response);
 
-        verify(listener, never()).receiveValue(any(TmdbConfiguration.class));
+        verify(listener, never()).receiveConfiguration(any(TmdbConfiguration.class));
         verify(listener, never()).notifyError(anyString());
     }
 
@@ -125,7 +125,7 @@ public class CommandGetConfigurationTest {
 
         command.onResponse(caller, errorResponse);
 
-        verify(listener, never()).receiveValue(any(TmdbConfiguration.class));
+        verify(listener, never()).receiveConfiguration(any(TmdbConfiguration.class));
         verify(listener).notifyError(eq(ApiStatus.SERVER_ERROR));
     }
 
@@ -135,7 +135,7 @@ public class CommandGetConfigurationTest {
 
         command.onResponse(caller, errorResponse);
 
-        verify(listener, never()).receiveValue(any(TmdbConfiguration.class));
+        verify(listener, never()).receiveConfiguration(any(TmdbConfiguration.class));
         verify(listener).notifyError(eq(ApiStatus.CLIENT_ERROR));
     }
 

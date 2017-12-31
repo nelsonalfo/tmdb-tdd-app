@@ -1,52 +1,48 @@
-package nelsonalfo.tmdbunittestsapp.command.detail;
+package nelsonalfo.tmdbunittestsapp.command.list;
 
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
-import java.util.List;
 
 import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
 import nelsonalfo.tmdbunittestsapp.command.Command;
 import nelsonalfo.tmdbunittestsapp.models.Constants;
-import nelsonalfo.tmdbunittestsapp.models.MovieResume;
-import nelsonalfo.tmdbunittestsapp.models.MoviesResponse;
+import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
 /**
- * Created by nelso on 27/12/2017.
+ * Created by nelso on 30/12/2017.
  */
-
-public class CommandGetMovies implements Command<List<MovieResume>>, Callback<MoviesResponse> {
+public class GetConfigurationCommand implements Command<TmdbConfiguration>, Callback<TmdbConfiguration> {
     private static final String EXCEPTION_MESSAGE = "An instance of TheMovieDbRestApi and an instance of Command.Listener are required";
 
     private final TheMovieDbRestApi service;
-    private Listener<List<MovieResume>> listener;
+    private Listener listener;
 
 
-    public CommandGetMovies(TheMovieDbRestApi service) {
+    public GetConfigurationCommand(TheMovieDbRestApi service) {
         this.service = service;
     }
 
     @Override
-    public void run() throws IllegalArgumentException {
-        if (service == null || listener == null) {
+    public void run() {
+        if(service == null || listener == null) {
             throw new IllegalArgumentException(EXCEPTION_MESSAGE);
         }
 
-        service.getMovies(Constants.MOST_POPULAR_MOVIES, Constants.API_KEY).enqueue(this);
+        service.getConfiguration(Constants.API_KEY).enqueue(this);
     }
 
-    @Override
-    public void setListener(Listener<List<MovieResume>> listener) {
+    public void setListener(Listener listener) {
         this.listener = listener;
     }
 
     @Override
-    public void onResponse(@NonNull Call<MoviesResponse> call, @NonNull Response<MoviesResponse> response) {
+    public void onResponse(@NonNull Call<TmdbConfiguration> call, @NonNull Response<TmdbConfiguration> response) {
         if (listener != null) {
             if (response.isSuccessful()) {
                 handleSuccess(response);
@@ -56,17 +52,17 @@ public class CommandGetMovies implements Command<List<MovieResume>>, Callback<Mo
         }
     }
 
-    private void handleSuccess(@NonNull Response<MoviesResponse> response) {
-        MoviesResponse moviesResponse = response.body();
+    private void handleSuccess(@NonNull Response<TmdbConfiguration> response) {
+        TmdbConfiguration configuration = response.body();
 
-        if (moviesResponse != null) {
-            listener.receiveValue(moviesResponse.results);
+        if (configuration != null) {
+            listener.receiveConfiguration(configuration);
         } else {
             listener.notifyError(ApiStatus.NO_RESULT);
         }
     }
 
-    private void handleError(@NonNull Response<MoviesResponse> response) {
+    private void handleError(@NonNull Response<TmdbConfiguration> response) {
         switch (response.code()) {
             case ApiStatus.Code.SERVER_ERROR:
                 listener.notifyError(ApiStatus.SERVER_ERROR);
@@ -78,7 +74,7 @@ public class CommandGetMovies implements Command<List<MovieResume>>, Callback<Mo
     }
 
     @Override
-    public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable ex) {
+    public void onFailure(@NonNull Call<TmdbConfiguration> call, @NonNull Throwable ex) {
         if (listener == null) {
             return;
         }
@@ -86,5 +82,9 @@ public class CommandGetMovies implements Command<List<MovieResume>>, Callback<Mo
         if (ex instanceof IOException) {
             listener.notifyError(ApiStatus.NETWORK_ERROR);
         }
+    }
+
+    public interface Listener extends Command.Listener {
+        void receiveConfiguration(TmdbConfiguration configuration);
     }
 }

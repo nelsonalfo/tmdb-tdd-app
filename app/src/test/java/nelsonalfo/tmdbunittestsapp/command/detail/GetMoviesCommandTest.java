@@ -7,11 +7,10 @@ import org.mockito.Mock;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 
 import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
-import nelsonalfo.tmdbunittestsapp.command.Command;
+import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 import nelsonalfo.tmdbunittestsapp.models.Constants;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 import nelsonalfo.tmdbunittestsapp.models.MoviesResponse;
@@ -31,27 +30,27 @@ import static org.mockito.MockitoAnnotations.initMocks;
 /**
  * Created by nelso on 27/12/2017.
  */
-public class CommandGetMoviesTest {
+public class GetMoviesCommandTest {
     @Mock
     private TheMovieDbRestApi service;
     @Mock
     private Call<MoviesResponse> caller;
     @Mock
-    private Command.Listener<List<MovieResume>> listener;
+    private GetMoviesCommand.Listener listener;
     @Mock
     private ResponseBody errorBody;
 
-    private CommandGetMovies command;
+    private GetMoviesCommand command;
 
 
-    public CommandGetMoviesTest() {
+    public GetMoviesCommandTest() {
     }
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
 
-        command = new CommandGetMovies(service);
+        command = new GetMoviesCommand(service);
         command.setListener(listener);
     }
 
@@ -67,7 +66,7 @@ public class CommandGetMoviesTest {
 
     @Test
     public void run_serviceIsNull_throwAnException() throws Exception {
-        command = new CommandGetMovies(null);
+        command = new GetMoviesCommand(null);
 
         try {
             command.run();
@@ -95,7 +94,7 @@ public class CommandGetMoviesTest {
 
         command.onResponse(caller, response);
 
-        verify(listener).receiveValue(eq(body.results));
+        verify(listener).receiveMovies(eq(body.results));
     }
 
     @Test
@@ -104,7 +103,7 @@ public class CommandGetMoviesTest {
 
         command.onResponse(caller, response);
 
-        verify(listener, never()).receiveValue(ArgumentMatchers.<MovieResume>anyList());
+        verify(listener, never()).receiveMovies(ArgumentMatchers.<MovieResume>anyList());
         verify(listener).notifyError(eq(ApiStatus.NO_RESULT));
     }
 
@@ -115,7 +114,7 @@ public class CommandGetMoviesTest {
         command.setListener(null);
         command.onResponse(caller, response);
 
-        verify(listener, never()).receiveValue(ArgumentMatchers.<MovieResume>anyList());
+        verify(listener, never()).receiveMovies(ArgumentMatchers.<MovieResume>anyList());
         verify(listener, never()).notifyError(anyString());
     }
 
@@ -125,7 +124,7 @@ public class CommandGetMoviesTest {
 
         command.onResponse(caller, errorResponse);
 
-        verify(listener, never()).receiveValue(ArgumentMatchers.<MovieResume>anyList());
+        verify(listener, never()).receiveMovies(ArgumentMatchers.<MovieResume>anyList());
         verify(listener).notifyError(eq(ApiStatus.SERVER_ERROR));
     }
 
@@ -135,7 +134,7 @@ public class CommandGetMoviesTest {
 
         command.onResponse(caller, errorResponse);
 
-        verify(listener, never()).receiveValue(ArgumentMatchers.<MovieResume>anyList());
+        verify(listener, never()).receiveMovies(ArgumentMatchers.<MovieResume>anyList());
         verify(listener).notifyError(eq(ApiStatus.CLIENT_ERROR));
     }
 

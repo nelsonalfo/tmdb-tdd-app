@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
-import nelsonalfo.tmdbunittestsapp.command.Command;
+import nelsonalfo.tmdbunittestsapp.command.list.GetConfigurationCommand;
+import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -30,7 +31,9 @@ public class MovieListPresenterTest {
     @Mock
     MovieListContract.View view;
     @Mock
-    private Command<List<MovieResume>> command;
+    private GetMoviesCommand moviesCommand;
+    @Mock
+    private GetConfigurationCommand configCommand;
     @Captor
     private ArgumentCaptor<List<MovieResume>> moviesArgumentCaptor;
 
@@ -41,33 +44,42 @@ public class MovieListPresenterTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        presenter = new MovieListPresenter(view, command);
+        presenter = new MovieListPresenter(view, moviesCommand, configCommand);
     }
 
     @Test
     public void createPresenter_noViewSet_throwException() throws Exception {
-        try{
-            presenter = new MovieListPresenter(null, command);
-        }catch (IllegalArgumentException ex){
+        try {
+            presenter = new MovieListPresenter(null, moviesCommand, null);
+        } catch (IllegalArgumentException ex) {
             assertThat(ex).hasMessageThat().isEqualTo("The params are needed");
         }
     }
 
     @Test
-    public void createPresenter_noCommandSet_throwException() throws Exception {
-        try{
-            presenter = new MovieListPresenter(null, command);
-        }catch (IllegalArgumentException ex){
+    public void createPresenter_noGetMoviesCommandSet_throwException() throws Exception {
+        try {
+            presenter = new MovieListPresenter(null, moviesCommand, null);
+        } catch (IllegalArgumentException ex) {
             assertThat(ex).hasMessageThat().isEqualTo("The params are needed");
         }
     }
 
     @Test
-    public void callGetMoviesApi_commandIsSet_runTheCommand() throws Exception {
+    public void createPresenter_noGetConfigurationCommandSet_throwException() throws Exception {
+        try {
+            presenter = new MovieListPresenter(view, moviesCommand, null);
+        } catch (IllegalArgumentException ex) {
+            assertThat(ex).hasMessageThat().isEqualTo("The params are needed");
+        }
+    }
+
+    @Test
+    public void callApi_configCommandIsSet_runTheCommand() throws Exception {
         presenter.callApi();
 
-        verify(command).setListener(presenter);
-        verify(command).run();
+        //TODO revisar como puedo puedo manejar mas de un listener dentro del presentardor y poder probarlos.
+        // Quiza la respuesta este en delegar la resposabilida a otra clase
     }
 
     @Test
@@ -76,7 +88,7 @@ public class MovieListPresenterTest {
         MovieResume movie = new MovieResume(1, "It");
         movies.add(movie);
 
-        presenter.receiveValue(movies);
+        presenter.receiveMovies(movies);
 
         verify(view).showMovies(moviesArgumentCaptor.capture());
         List<MovieResume> returnedMovies = moviesArgumentCaptor.getValue();
@@ -88,7 +100,7 @@ public class MovieListPresenterTest {
     @Test
     public void receiveValue_listOfMoviesIsNull_showNoMoviesMessage() throws Exception {
 
-        presenter.receiveValue(null);
+        presenter.receiveMovies(null);
 
         verify(view, never()).showMovies(ArgumentMatchers.<MovieResume>anyList());
         verify(view).showThereIsNoMovies();
@@ -98,7 +110,7 @@ public class MovieListPresenterTest {
     public void receiveValue_listOfMoviesIsEmpty_showNoMoviesMessage() throws Exception {
         ArrayList<MovieResume> movies = new ArrayList<>();
 
-        presenter.receiveValue(movies);
+        presenter.receiveMovies(movies);
 
         verify(view, never()).showMovies(ArgumentMatchers.<MovieResume>anyList());
         verify(view).showThereIsNoMovies();
