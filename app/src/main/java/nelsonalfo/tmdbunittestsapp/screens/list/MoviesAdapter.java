@@ -10,6 +10,7 @@ import java.util.List;
 
 import nelsonalfo.tmdbunittestsapp.R;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
+import nelsonalfo.tmdbunittestsapp.util.TmdbConfigurationUtil;
 
 
 /**
@@ -17,11 +18,11 @@ import nelsonalfo.tmdbunittestsapp.models.MovieResume;
  */
 
 class MoviesAdapter extends RecyclerView.Adapter<MoviesViewHolder> {
-    private final String baseImageUrl;
+    private final TmdbConfigurationUtil configurationUtil;
     private final List<MovieResume> dataSet;
 
-    public MoviesAdapter(String baseImageUrl, List<MovieResume> movies) {
-        this.baseImageUrl = baseImageUrl;
+    public MoviesAdapter(TmdbConfigurationUtil configurationUtil, List<MovieResume> movies) {
+        this.configurationUtil = configurationUtil;
         dataSet = movies;
     }
 
@@ -38,7 +39,7 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesViewHolder> {
     public void onBindViewHolder(MoviesViewHolder holder, int position) {
         if (dataSet != null && !dataSet.isEmpty()) {
             MovieResume movieResume = dataSet.get(position);
-            holder.bind(baseImageUrl, movieResume);
+            holder.bind(configurationUtil, movieResume);
         }
     }
 

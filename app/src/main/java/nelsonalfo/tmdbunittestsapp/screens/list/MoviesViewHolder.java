@@ -11,6 +11,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import nelsonalfo.tmdbunittestsapp.R;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
+import nelsonalfo.tmdbunittestsapp.util.TmdbConfigurationUtil;
 
 
 /**
@@ -31,8 +32,8 @@ class MoviesViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void bind(String baseImageUrl, MovieResume movieResume) {
-        String posterImageUrl = baseImageUrl + movieResume.posterPath;
+    public void bind(TmdbConfigurationUtil configurationUtil, MovieResume movieResume) {
+        String posterImageUrl = configurationUtil.getPosterImageUrl(movieResume.posterPath);
         Picasso.with(itemView.getContext()).load(posterImageUrl).into(moviePoster);
 
         moveTitle.setText(movieResume.title);

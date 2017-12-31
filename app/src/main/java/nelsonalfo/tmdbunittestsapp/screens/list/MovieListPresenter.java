@@ -19,7 +19,7 @@ public class MovieListPresenter implements MovieListContract.Presenter, GetMovie
     private final GetConfigurationCommand configCommand;
 
 
-    public MovieListPresenter(MovieListContract.View view, GetMoviesCommand moviesCommand, GetConfigurationCommand configCommand) {
+    public MovieListPresenter(MovieListContract.View view, GetMoviesCommand moviesCommand, GetConfigurationCommand configCommand) throws IllegalArgumentException {
         if (view == null || moviesCommand == null || configCommand == null) {
             throw new IllegalArgumentException("All the params are needed");
         }
@@ -41,10 +41,10 @@ public class MovieListPresenter implements MovieListContract.Presenter, GetMovie
 
     @Override
     public void receiveConfiguration(TmdbConfiguration configuration) {
-        if(configuration!= null) {
+        if (configuration != null) {
             view.setConfiguration(configuration);
             moviesCommand.execute();
-        }else{
+        } else {
             view.showThereIsNoMovies();
         }
     }

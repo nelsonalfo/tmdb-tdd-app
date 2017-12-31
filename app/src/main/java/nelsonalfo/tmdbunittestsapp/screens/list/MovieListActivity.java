@@ -14,14 +14,18 @@ import nelsonalfo.tmdbunittestsapp.R;
 import nelsonalfo.tmdbunittestsapp.api.ApiServiceGenerator;
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
 import nelsonalfo.tmdbunittestsapp.command.CommandFactory;
+import nelsonalfo.tmdbunittestsapp.command.list.GetConfigurationCommand;
 import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
+import nelsonalfo.tmdbunittestsapp.util.TmdbConfigurationUtil;
 
 
 public class MovieListActivity extends AppCompatActivity implements MovieListContract.View {
     @BindView(R.id.movie_list)
     RecyclerView recyclerView;
+
+    private TmdbConfigurationUtil configurationUtil;
 
     private MovieListContract.Presenter presenter;
 
@@ -35,10 +39,11 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        TheMovieDbRestApi service = ApiServiceGenerator.createClient();
-        GetMoviesCommand command = CommandFactory.createCommandGetMovies(service);
+        final TheMovieDbRestApi service = ApiServiceGenerator.createClient();
+        final GetMoviesCommand moviesCommand = CommandFactory.createCommandGetMovies(service);
+        final GetConfigurationCommand configCommand = CommandFactory.createCommandGetConfiguration(service);
 
-        setPresenter(new MovieListPresenter(this, command, null));
+        setPresenter(new MovieListPresenter(this, moviesCommand, configCommand));
 
         presenter.callApi();
     }
@@ -54,12 +59,6 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
     }
 
     @Override
-    public void showMovies(List<MovieResume> movies) {
-        Toast.makeText(this, "Me llegaron las peliculas - size = " + movies.size(), Toast.LENGTH_SHORT).show();
-        //TODO
-    }
-
-    @Override
     public void showThereIsNoMovies() {
         Toast.makeText(this, "showThereIsNoMovies", Toast.LENGTH_SHORT).show();
         //TODO Puedo o llamar un toast, o mostrar un texto en pantalla indicando que no hay valores
@@ -67,7 +66,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
 
     @Override
     public void showConnectionProblemsMessage() {
-        Toast.makeText(this, "hay problemas de conexion, no se `pudieron obtener las peliculas", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "hay problemas de conexion, no se pudieron obtener las peliculas", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -77,6 +76,14 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
 
     @Override
     public void setConfiguration(TmdbConfiguration configuration) {
-        //TODO
+        configurationUtil = new TmdbConfigurationUtil(configuration);
+    }
+
+    @Override
+    public void showMovies(List<MovieResume> movies) {
+        if(configurationUtil != null){
+            MoviesAdapter adapter = new MoviesAdapter(configurationUtil, movies);
+            recyclerView.setAdapter(adapter);
+        }
     }
 }
