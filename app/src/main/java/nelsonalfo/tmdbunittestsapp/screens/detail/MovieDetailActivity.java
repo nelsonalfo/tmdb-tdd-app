@@ -7,9 +7,11 @@ import android.support.v7.widget.Toolbar;
 import nelsonalfo.tmdbunittestsapp.R;
 
 
-public class MovieDetailActivity extends AppCompatActivity {
-
+public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View {
     public static final String ARG_MOVIE_ID = "ARG_MOVIE_ID";
+
+    private MovieDetailContract.Presenter presenter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +22,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        setPresenter(new MovieDetailPresenter());
     }
 
+    @Override
+    public void setPresenter(MovieDetailContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
 }
