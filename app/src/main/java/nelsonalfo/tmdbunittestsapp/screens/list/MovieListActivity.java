@@ -16,6 +16,7 @@ import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
 import nelsonalfo.tmdbunittestsapp.command.CommandFactory;
 import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
+import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
 
 
 public class MovieListActivity extends AppCompatActivity implements MovieListContract.View {
@@ -72,5 +73,10 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
     @Override
     public void showUnknownErrorMessage() {
         Toast.makeText(this, "Hubo un error desconocido", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setConfiguration(TmdbConfiguration configuration) {
+        //TODO
     }
 }

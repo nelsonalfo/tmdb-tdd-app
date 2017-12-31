@@ -19,6 +19,7 @@ import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
 import nelsonalfo.tmdbunittestsapp.command.list.GetConfigurationCommand;
 import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
+import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -51,6 +52,14 @@ public class MovieListPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         presenter = new MovieListPresenter(view, moviesCommand, configCommand);
+    }
+
+    @Test
+    public void createPresenter_allParamsAreSet_initializePresenter() throws Exception {
+        presenter = new MovieListPresenter(view, moviesCommand, configCommand);
+
+        verify(moviesCommand).setListener(eq(presenter));
+        verify(configCommand).setListener(eq(presenter));
     }
 
     @Test
@@ -87,12 +96,21 @@ public class MovieListPresenterTest {
     public void callApi_configCommandIsSet_runTheCommand() throws Exception {
         presenter.callApi();
 
-        verify(configCommand).setListener(eq(presenter));
         verify(configCommand).execute();
     }
 
     @Test
-    public void receiveValue_listOfMovies_showListOfMovies() throws Exception {
+    public void receiveConfiguration_configurationReturned_callGetMoviesCommandAndReturnConfigToView() throws Exception {
+        TmdbConfiguration configuration = new TmdbConfiguration();
+
+        presenter.receiveConfiguration(configuration);
+
+        verify(view).setConfiguration(eq(configuration));
+        verify(moviesCommand).execute();
+    }
+
+    @Test
+    public void receiveMovies_listOfMovies_showListOfMovies() throws Exception {
         ArrayList<MovieResume> movies = new ArrayList<>();
         MovieResume movie = new MovieResume(1, "It");
         movies.add(movie);
@@ -107,7 +125,7 @@ public class MovieListPresenterTest {
     }
 
     @Test
-    public void receiveValue_listOfMoviesIsNull_showNoMoviesMessage() throws Exception {
+    public void receiveMovies_listOfMoviesIsNull_showNoMoviesMessage() throws Exception {
 
         presenter.receiveMovies(null);
 
@@ -116,7 +134,7 @@ public class MovieListPresenterTest {
     }
 
     @Test
-    public void receiveValue_listOfMoviesIsEmpty_showNoMoviesMessage() throws Exception {
+    public void receiveMovies_listOfMoviesIsEmpty_showNoMoviesMessage() throws Exception {
         ArrayList<MovieResume> movies = new ArrayList<>();
 
         presenter.receiveMovies(movies);

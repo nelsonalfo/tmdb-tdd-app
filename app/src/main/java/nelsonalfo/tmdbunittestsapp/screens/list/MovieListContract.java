@@ -3,6 +3,7 @@ package nelsonalfo.tmdbunittestsapp.screens.list;
 import java.util.List;
 
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
+import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
 
 
 /**
@@ -22,6 +23,8 @@ public interface MovieListContract {
         void showConnectionProblemsMessage();
 
         void showUnknownErrorMessage();
+
+        void setConfiguration(TmdbConfiguration configuration);
     }
 
     interface Presenter {

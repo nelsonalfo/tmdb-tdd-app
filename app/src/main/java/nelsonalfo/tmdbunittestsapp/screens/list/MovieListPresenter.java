@@ -25,8 +25,12 @@ public class MovieListPresenter implements MovieListContract.Presenter, GetMovie
         }
 
         this.view = view;
+
         this.configCommand = configCommand;
+        this.configCommand.setListener(this);
+
         this.moviesCommand = moviesCommand;
+        this.moviesCommand.setListener(this);
     }
 
     @Override
@@ -37,7 +41,8 @@ public class MovieListPresenter implements MovieListContract.Presenter, GetMovie
 
     @Override
     public void receiveConfiguration(TmdbConfiguration configuration) {
-
+        view.setConfiguration(configuration);
+        moviesCommand.execute();
     }
 
     @Override
