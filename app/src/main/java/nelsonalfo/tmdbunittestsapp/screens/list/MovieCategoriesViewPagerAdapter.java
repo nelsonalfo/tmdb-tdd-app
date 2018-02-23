@@ -12,8 +12,8 @@ import nelsonalfo.tmdbunittestsapp.models.Constants;
  */
 
 public class MovieCategoriesViewPagerAdapter extends FragmentPagerAdapter {
-    private static final int POPULAR_TAB = 0;
-    private static final int TOP_RATED_TAB = 1;
+    private static final int TOP_RATED_TAB = 0;
+    private static final int POPULAR_TAB = 1;
     private static final int UPCOMING_TAB = 2;
 
     private MoviesCategoryFragment popularMoviesFragment;
@@ -31,10 +31,10 @@ public class MovieCategoriesViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case POPULAR_TAB:
-                return popularMoviesFragment;
             case TOP_RATED_TAB:
                 return topRatedMoviesFragment;
+            case POPULAR_TAB:
+                return popularMoviesFragment;
             case UPCOMING_TAB:
                 return upcomingFragment;
             default:

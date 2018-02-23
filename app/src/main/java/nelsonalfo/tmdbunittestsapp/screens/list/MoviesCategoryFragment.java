@@ -23,6 +23,7 @@ import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
 import nelsonalfo.tmdbunittestsapp.command.CommandFactory;
 import nelsonalfo.tmdbunittestsapp.command.list.GetConfigurationCommand;
 import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
+import nelsonalfo.tmdbunittestsapp.models.Constants;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
 import nelsonalfo.tmdbunittestsapp.screens.detail.MovieDetailActivity;
@@ -62,7 +63,7 @@ public class MoviesCategoryFragment extends Fragment implements MovieListContrac
         recyclerView.setHasFixedSize(true);
 
         final TheMovieDbRestApi service = new ApiServiceGenerator(getContext()).createClient();
-        final GetMoviesCommand moviesCommand = CommandFactory.createGetPopularMoviesCommand(service);
+        final GetMoviesCommand moviesCommand = getCommandForGivenCategory(service);
         final GetConfigurationCommand configCommand = CommandFactory.createGetConfigurationCommand(service);
 
         setPresenter(new MovieListPresenter(this, moviesCommand, configCommand));
@@ -70,6 +71,17 @@ public class MoviesCategoryFragment extends Fragment implements MovieListContrac
         presenter.callApi();
 
         return rootView;
+    }
+
+    private GetMoviesCommand getCommandForGivenCategory(TheMovieDbRestApi service) {
+        switch (movieCategory) {
+            case Constants.UPCOMING_MOVIES:
+                return CommandFactory.createGetUpcomingMoviesCommand(service);
+            case Constants.TOP_RATED_MOVIES:
+                return CommandFactory.createGetTopRatedMoviesCommand(service);
+            default:
+                return CommandFactory.createGetPopularMoviesCommand(service);
+        }
     }
 
     @Override

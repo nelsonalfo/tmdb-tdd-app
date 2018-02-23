@@ -31,7 +31,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
  * Created by nelso on 27/12/2017.
  */
 public class GetMoviesCommandTest {
-    private static final String EXPECTED_EXCEPTION_MESSAGE= "An instance of TheMovieDbRestApi and an instance of GetMoviesCommand.Listener are required";
+    private static final String EXPECTED_EXCEPTION_MESSAGE = "An instance of TheMovieDbRestApi and an instance of GetMoviesCommand.Listener are required";
 
     @Mock
     private TheMovieDbRestApi service;
@@ -57,7 +57,40 @@ public class GetMoviesCommandTest {
     }
 
     @Test
-    public void run_serviceIsSetAndListenerIsSet_callGetMoviesApi() throws Exception {
+    public void execute_serviceIsSetAndListenerIsSetAndCategoryIsMostPopular_callGetPopularMoviesApi() throws Exception {
+        when(service.getMovies(anyString(), anyString())).thenReturn(caller);
+        command.setCategory(Constants.MOST_POPULAR_MOVIES);
+
+        command.execute();
+
+        verify(service).getMovies(eq(Constants.MOST_POPULAR_MOVIES), eq(Constants.API_KEY));
+        verify(caller).enqueue(eq(command));
+    }
+
+    @Test
+    public void execute_serviceIsSetAndListenerIsSetAndCategoryIsNull_callGetPopularMoviesApi() throws Exception {
+        when(service.getMovies(anyString(), anyString())).thenReturn(caller);
+        command.setCategory(null);
+
+        command.execute();
+
+        verify(service).getMovies(eq(Constants.MOST_POPULAR_MOVIES), eq(Constants.API_KEY));
+        verify(caller).enqueue(eq(command));
+    }
+
+    @Test
+    public void execute_serviceIsSetAndListenerIsSetAndCategoryIsEmpty_callGetPopularMoviesApi() throws Exception {
+        when(service.getMovies(anyString(), anyString())).thenReturn(caller);
+        command.setCategory("");
+
+        command.execute();
+
+        verify(service).getMovies(eq(Constants.MOST_POPULAR_MOVIES), eq(Constants.API_KEY));
+        verify(caller).enqueue(eq(command));
+    }
+
+    @Test
+    public void execute_serviceIsSetAndListenerIsSetAndCategoryIsNotSet_callGetPopularMoviesApi() throws Exception {
         when(service.getMovies(anyString(), anyString())).thenReturn(caller);
 
         command.execute();
@@ -67,7 +100,19 @@ public class GetMoviesCommandTest {
     }
 
     @Test
-    public void run_serviceIsNull_throwAnException() throws Exception {
+    public void execute_serviceIsSetAndListenerIsSetAndCategoryIsTopRatedt_callGetTopRatedMoviesApi() throws Exception {
+        when(service.getTopRatedMovies(anyString())).thenReturn(caller);
+        command.setCategory(Constants.TOP_RATED_MOVIES);
+
+        command.execute();
+
+        verify(service).getTopRatedMovies(eq(Constants.API_KEY));
+        verify(caller).enqueue(eq(command));
+    }
+
+
+    @Test
+    public void execute_serviceIsNull_throwAnException() throws Exception {
         command = new GetMoviesCommand(null);
 
         try {
@@ -78,9 +123,8 @@ public class GetMoviesCommandTest {
     }
 
 
-
     @Test
-    public void run_listenerIsNull_throwAnException() throws Exception {
+    public void execute_listenerIsNull_throwAnException() throws Exception {
         command.setListener(null);
 
         try {

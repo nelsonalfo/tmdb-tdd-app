@@ -25,6 +25,7 @@ public class GetMoviesCommand implements Command<List<MovieResume>>, Callback<Mo
 
     private final TheMovieDbRestApi service;
     private Listener listener;
+    private String category;
 
 
     public GetMoviesCommand(TheMovieDbRestApi service) {
@@ -37,7 +38,22 @@ public class GetMoviesCommand implements Command<List<MovieResume>>, Callback<Mo
             throw new IllegalArgumentException(EXCEPTION_MESSAGE);
         }
 
-        service.getMovies(Constants.MOST_POPULAR_MOVIES, Constants.API_KEY).enqueue(this);
+        if (category == null || category.isEmpty()) {
+            category = Constants.MOST_POPULAR_MOVIES;
+        }
+
+        switch (category) {
+            case Constants.TOP_RATED_MOVIES:
+                service.getTopRatedMovies(Constants.API_KEY).enqueue(this);
+                break;
+            case Constants.UPCOMING_MOVIES:
+                service.getUpcomingMovies(Constants.API_KEY).enqueue(this);
+                break;
+            case Constants.MOST_POPULAR_MOVIES:
+                service.getMovies(Constants.MOST_POPULAR_MOVIES, Constants.API_KEY).enqueue(this);
+                break;
+        }
+
     }
 
     public void setListener(Listener listener) {
@@ -53,6 +69,14 @@ public class GetMoviesCommand implements Command<List<MovieResume>>, Callback<Mo
                 handleError(response);
             }
         }
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     private void handleSuccess(@NonNull Response<MoviesResponse> response) {
