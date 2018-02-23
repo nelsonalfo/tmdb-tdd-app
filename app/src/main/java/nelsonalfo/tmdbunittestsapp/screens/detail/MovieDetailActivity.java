@@ -3,6 +3,7 @@ package nelsonalfo.tmdbunittestsapp.screens.detail;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -147,5 +148,15 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     public void finishAndShowUnknownErrorMessage() {
         Toast.makeText(this, R.string.error_unknown_error, Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return false;
     }
 }

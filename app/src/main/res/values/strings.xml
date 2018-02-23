@@ -14,4 +14,7 @@
     <string name="ranking_and_votes">Puntuación: %1$.1f - Votos: %2$d</string>
     <string name="genres_text">Genero: %1$s</string>
     <string name="content_poster_image">poster image</string>
+    <string name="top_rated_title">Top Rated</string>
+    <string name="popular_title">Popular</string>
+    <string name="upcoming_title">Upcoming</string>
 </resources>
