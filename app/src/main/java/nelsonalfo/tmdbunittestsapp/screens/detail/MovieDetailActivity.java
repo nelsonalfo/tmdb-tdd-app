@@ -1,10 +1,10 @@
 package nelsonalfo.tmdbunittestsapp.screens.detail;
 
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -54,7 +54,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     ProgressBar progressBar;
 
     @BindView(R.id.movie_detail_container)
-    ConstraintLayout detailContainer;
+    ViewGroup detailContainer;
 
     private TmdbConfigurationUtil configurationUtil;
     private MovieDetailContract.Presenter presenter;
@@ -123,7 +123,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         }
 
         final StringBuilder formattedGenres = movieDetail.getFormattedGenres();
-        movieGenders.setText(formattedGenres.length() > 0 ? getString(R.string.genres_text, formattedGenres.toString()) : getString(R.string.genres_text, "N/A"));
+        movieGenders.setText(formattedGenres.length() > 0 ?
+                getString(R.string.genres_text, formattedGenres.toString()) :
+                getString(R.string.genres_text, "N/A"));
 
         progressBar.setVisibility(View.GONE);
         detailContainer.setVisibility(View.VISIBLE);
