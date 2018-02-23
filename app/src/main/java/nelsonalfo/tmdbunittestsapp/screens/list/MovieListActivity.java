@@ -42,8 +42,8 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        final TheMovieDbRestApi service = ApiServiceGenerator.createClient();
-        final GetMoviesCommand moviesCommand = CommandFactory.createGetMoviesCommand(service);
+        final TheMovieDbRestApi service = new ApiServiceGenerator(this).createClient();
+        final GetMoviesCommand moviesCommand = CommandFactory.createGetPopularMoviesCommand(service);
         final GetConfigurationCommand configCommand = CommandFactory.createGetConfigurationCommand(service);
 
         setPresenter(new MovieListPresenter(this, moviesCommand, configCommand));
@@ -84,7 +84,7 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
 
     @Override
     public void showMovies(List<MovieResume> movies) {
-        if(configurationUtil != null){
+        if (configurationUtil != null) {
             final MoviesAdapter adapter = new MoviesAdapter(configurationUtil, movies);
             adapter.setListener(this);
 

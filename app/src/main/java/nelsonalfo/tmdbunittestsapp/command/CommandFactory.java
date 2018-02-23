@@ -19,7 +19,7 @@ public class CommandFactory {
     }
 
 
-    public static GetMoviesCommand createGetMoviesCommand(TheMovieDbRestApi service) {
+    public static GetMoviesCommand createGetPopularMoviesCommand(TheMovieDbRestApi service) {
         if (service == null) throw new IllegalArgumentException(EXCEPTION_MESSAGE);
         return new GetMoviesCommand(service);
     }

@@ -16,6 +16,12 @@ public interface TheMovieDbRestApi {
     @GET("discover/movie")
     Call<MoviesResponse> getMovies(@Query("sort_by") String sortBy, @Query("api_key") String apiKey);
 
+    @GET("movie/top_rated")
+    Call<MoviesResponse> getTopRatedMovies(@Query("api_key") String apiKey);
+
+    @GET("movie/upcoming")
+    Call<MoviesResponse> getUpcomingMovies(@Query("api_key") String apiKey);
+
     @GET("movie/{movie_id}")
     Call<MovieDetail> getMovieDetail(@Path("movie_id") Integer movieId, @Query("api_key") String apiKey);
 

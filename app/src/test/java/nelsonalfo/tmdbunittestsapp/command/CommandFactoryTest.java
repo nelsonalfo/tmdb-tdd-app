@@ -30,16 +30,16 @@ public class CommandFactoryTest {
     }
 
     @Test
-    public void createCommandGetMovies_theServiceIsSet_createAnInstanceOfTheCommand() throws Exception {
-        GetMoviesCommand command = CommandFactory.createGetMoviesCommand(service);
+    public void createCommandGetPopularMovies_theServiceIsSet_createAnInstanceOfTheCommand() throws Exception {
+        GetMoviesCommand command = CommandFactory.createGetPopularMoviesCommand(service);
 
         assertThat(command).isNotNull();
     }
 
     @Test
-    public void createCommandGetMovies_theServiceIsNull_throwException() throws Exception {
+    public void createCommandGetPopularMovies_theServiceIsNull_throwException() throws Exception {
         try {
-            CommandFactory.createGetMoviesCommand(null);
+            CommandFactory.createGetPopularMoviesCommand(null);
             Assert.fail("Is expected to throw an IllegalArgumentException");
         } catch (IllegalArgumentException ex) {
             assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_EXCEPTION_MESSAGE);
