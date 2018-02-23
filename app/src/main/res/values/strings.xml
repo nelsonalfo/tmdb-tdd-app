@@ -1,5 +1,16 @@
 <resources>
-    <string name="app_name">MovieDbUnitTetsApplication</string>
-    <string name="title_activity_movie_detail">MovieDetailActivity</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Peliculas</string>
+    <string name="title_activity_movie_detail">Detalle</string>
+    <string name="action_settings">Configuración</string>
+    <string name="error_no_movie_details">Disculpa, no podemos obtener el detalle de la pelicula</string>
+    <string name="error_no_movies_available">No hay peliculas disponibles</string>
+    <string name="error_unknown_error">Hubo un error desconocido</string>
+    <string name="error_connection_problems_cant_get_movies">Hay problemas de conexion, no se pudieron obtener las peliculas</string>
+    <string name="error_connection_problems_cant_get_movie_detail">Hay problemas de conexion, no se pudo obtener el detalle de la pelicula</string>
+    <string name="error_cant_execute_request">No se puede realizar la consulta</string>
+    <string name="content_backdrop_image">Imagen de fondo</string>
+    <string name="only_ranking">Puntuación: %1$f</string>
+    <string name="only_votes">Votos: %1$d</string>
+    <string name="ranking_and_votes">Puntuación: %1$.1f - Votos: %2$d</string>
+    <string name="genres_text">Genero: %1$s</string>
 </resources>

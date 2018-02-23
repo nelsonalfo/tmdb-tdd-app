@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+
 public class MovieDetail {
 
     @SerializedName("adult")
@@ -82,6 +83,30 @@ public class MovieDetail {
     @SerializedName("vote_count")
     @Expose
     public Integer voteCount;
+
+    public StringBuilder getFormattedGenres() {
+        final StringBuilder genresText = new StringBuilder();
+
+        if (genres != null) {
+            for (int i = 0; i < genres.size(); i++) {
+                final Genre genre = genres.get(i);
+
+                if (genre != null && genre.name != null && !genre.name.isEmpty()) {
+                    addGenreInString(genresText, i, genre);
+                }
+            }
+        }
+
+        return genresText;
+    }
+
+    private void addGenreInString(StringBuilder genresText, int i, Genre genre) {
+        if (genresText.length() > 0) {
+            genresText.append(", ");
+        }
+
+        genresText.append(genre.name);
+    }
 
 }
 

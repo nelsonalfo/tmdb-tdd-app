@@ -14,8 +14,6 @@ public interface MovieListContract {
     interface View {
         void setPresenter(Presenter presenter);
 
-        void showCantRequestTheMoviesMessage();
-
         void showMovies(List<MovieResume> movies);
 
         void showThereIsNoMovies();

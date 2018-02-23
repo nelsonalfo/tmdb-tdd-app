@@ -10,7 +10,7 @@ import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
 public class TmdbConfigurationUtil {
     private final TmdbConfiguration configuration;
 
-    public TmdbConfigurationUtil(TmdbConfiguration configuration) {
+    public TmdbConfigurationUtil(TmdbConfiguration configuration) throws IllegalArgumentException {
         if (configuration == null) {
             throw new IllegalArgumentException("The param can not be null");
         }
@@ -68,5 +68,9 @@ public class TmdbConfigurationUtil {
         if (configuration.images.backdropSizes == null || configuration.images.backdropSizes.isEmpty()) {
             throw new IllegalArgumentException("The configuration dont have backdrop sizes");
         }
+    }
+
+    public TmdbConfiguration getConfiguration() {
+        return configuration;
     }
 }

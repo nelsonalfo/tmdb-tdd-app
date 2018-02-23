@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -57,24 +59,19 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
     }
 
     @Override
-    public void showCantRequestTheMoviesMessage() {
-        Toast.makeText(this, "No se puede realizar la consulta", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void showThereIsNoMovies() {
-        Toast.makeText(this, "showThereIsNoMovies", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.error_no_movies_available, Toast.LENGTH_SHORT).show();
         //TODO Puedo o llamar un toast, o mostrar un texto en pantalla indicando que no hay valores
     }
 
     @Override
     public void showConnectionProblemsMessage() {
-        Toast.makeText(this, "hay problemas de conexion, no se pudieron obtener las peliculas", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.error_connection_problems_cant_get_movies, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showUnknownErrorMessage() {
-        Toast.makeText(this, "Hubo un error desconocido", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.error_unknown_error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -94,8 +91,11 @@ public class MovieListActivity extends AppCompatActivity implements MovieListCon
 
     @Override
     public void onMovieSelected(MovieResume selectedMovie) {
-        final Intent intent = new Intent(this, MovieDetailActivity.class);
-        intent.putExtra(MovieDetailActivity.ARG_MOVIE_ID, selectedMovie.id);
+        final TmdbConfiguration configuration = configurationUtil.getConfiguration();
+
+        final Intent intent = new Intent(this, MovieDetailActivity.class)
+                .putExtra(MovieDetailActivity.ARG_MOVIE_ID, selectedMovie.id)
+                .putExtra(MovieDetailActivity.ARG_CONFIGURATION, Parcels.wrap(configuration));
 
         startActivity(intent);
     }

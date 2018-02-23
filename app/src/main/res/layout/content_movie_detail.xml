@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,86 +9,108 @@
     tools:context="nelsonalfo.tmdbunittestsapp.screens.detail.MovieDetailActivity"
     tools:showIn="@layout/activity_movie_detail">
 
-    <ImageView
-        android:id="@+id/movie_backdrop_image"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/movie_detail_container"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:background="#DDD"/>
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-    <ImageView
-        android:id="@+id/movie_poster"
-        android:layout_width="90dp"
-        android:layout_height="120dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="100dp"
-        app:layout_constraintBottom_toBottomOf="@+id/movie_backdrop_image"
-        app:layout_constraintEnd_toEndOf="@+id/movie_backdrop_image"
-        app:layout_constraintHorizontal_bias="0.06"
-        app:layout_constraintStart_toStartOf="@+id/movie_backdrop_image"
-        app:layout_constraintTop_toTopOf="@+id/movie_backdrop_image"
-        app:layout_constraintVertical_bias="0.49"
-        tools:background="#BBB"/>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/movie_poster">
-
-        <TextView
-            android:id="@+id/movie_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#222"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            tools:text="It"/>
-
-        <TextView
-            android:id="@+id/movie_votes"
+        <ImageView
+            android:id="@+id/movie_backdrop_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:textColor="#935e1e"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:gravity="end"
-            tools:text="Rank: 7.2 - Votos: 4932"/>
+            android:layout_height="150dp"
+            android:background="#DDD"
+            android:contentDescription="@string/content_backdrop_image"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/backdrop_image"/>
 
-        <TextView
-            android:id="@+id/movie_genders"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:maxLines="2"
-            android:textColor="#555"
-            android:textSize="14sp"
-            tools:text="Genero: Drama, Fantasy, Horror, Thriller"/>
+        <ImageView
+            android:id="@+id/movie_poster"
+            android:layout_width="90dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="100dp"
+            android:background="#BBB"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/movie_backdrop_image"
+            app:layout_constraintEnd_toEndOf="@+id/movie_backdrop_image"
+            app:layout_constraintHorizontal_bias="0.06"
+            app:layout_constraintStart_toStartOf="@+id/movie_backdrop_image"
+            app:layout_constraintTop_toTopOf="@+id/movie_backdrop_image"
+            app:layout_constraintVertical_bias="0.49"
+            tools:src="@drawable/poster_image"/>
 
-        <TextView
-            android:id="@+id/movie_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="#555"
-            android:textSize="16sp"
-            android:textStyle="italic"
-            tools:text="In a small town in Maine, seven children known as The Losers Club come face to face with life problems, bullies and a monster that takes the shape of a clown called Pennywise."/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/movie_poster">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/movie_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#222"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:text="Esto es un titulo bien largo"/>
 
-</android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/movie_votes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="end"
+                android:maxLines="1"
+                android:textColor="#935e1e"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                tools:text="Puntuación: 7.2 - Votos: 4932"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/movie_genders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:maxLines="2"
+                android:textColor="#555"
+                android:textSize="14sp"
+                tools:text="Genero, Drama, accion, Aventura, Vida"/>
+
+            <TextView
+                android:id="@+id/movie_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textColor="#555"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                tools:text="In a small town in Maine, seven children known as The Losers Club come face to face with life problems, bullies and a monster that takes the shape of a clown called Pennywise."/>
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"/>
+</FrameLayout>
+

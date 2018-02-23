@@ -1,5 +1,9 @@
 package nelsonalfo.tmdbunittestsapp.screens.detail;
 
+import nelsonalfo.tmdbunittestsapp.command.detail.MovieDetailCommand;
+import nelsonalfo.tmdbunittestsapp.models.MovieDetail;
+
+
 /**
  * Created by nelso on 31/12/2017.
  */
@@ -7,9 +11,18 @@ package nelsonalfo.tmdbunittestsapp.screens.detail;
 public interface MovieDetailContract {
     interface View {
         void setPresenter(Presenter presenter);
+
+        void showMovieDetail(MovieDetail movieDetail);
+
+        void finishAndShowNoDetailsMessage();
+
+        void finishAndShowConnectionProblemsMessage();
+
+        void finishAndShowUnknownErrorMessage();
     }
 
-    interface Presenter {
+    interface Presenter extends MovieDetailCommand.Listener {
 
+        void callApi();
     }
 }
