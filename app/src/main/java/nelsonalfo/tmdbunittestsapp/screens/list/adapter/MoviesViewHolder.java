@@ -1,4 +1,4 @@
-package nelsonalfo.tmdbunittestsapp.screens.list;
+package nelsonalfo.tmdbunittestsapp.screens.list.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

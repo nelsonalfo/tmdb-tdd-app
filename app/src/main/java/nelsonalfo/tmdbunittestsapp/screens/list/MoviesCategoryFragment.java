@@ -6,7 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -27,6 +31,7 @@ import nelsonalfo.tmdbunittestsapp.models.Constants;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
 import nelsonalfo.tmdbunittestsapp.screens.detail.MovieDetailActivity;
+import nelsonalfo.tmdbunittestsapp.screens.list.adapter.MoviesAdapter;
 import nelsonalfo.tmdbunittestsapp.util.TmdbConfigurationUtil;
 
 
@@ -41,6 +46,7 @@ public class MoviesCategoryFragment extends Fragment implements MovieListContrac
     private String movieCategory;
     private TmdbConfigurationUtil configurationUtil;
     private MovieListContract.Presenter presenter;
+    private MoviesAdapter adapter;
 
 
     public MoviesCategoryFragment() {
@@ -58,6 +64,8 @@ public class MoviesCategoryFragment extends Fragment implements MovieListContrac
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_movie_list, container, false);
         ButterKnife.bind(this, rootView);
+
+        setHasOptionsMenu(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
@@ -114,7 +122,7 @@ public class MoviesCategoryFragment extends Fragment implements MovieListContrac
     @Override
     public void showMovies(List<MovieResume> movies) {
         if (configurationUtil != null) {
-            final MoviesAdapter adapter = new MoviesAdapter(configurationUtil, movies);
+            adapter = new MoviesAdapter(configurationUtil, movies);
             adapter.setListener(this);
 
             recyclerView.setAdapter(adapter);
@@ -130,5 +138,44 @@ public class MoviesCategoryFragment extends Fragment implements MovieListContrac
                 .putExtra(MovieDetailActivity.ARG_CONFIGURATION, Parcels.wrap(configuration));
 
         startActivity(intent);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.movies_search, menu);
+
+        final MenuItem searchMenuItem = menu.findItem(R.id.search);
+
+        configureSearchView(searchMenuItem);
+    }
+
+    private void configureSearchView(MenuItem menuItem) {
+        final SearchView searchView = (SearchView) menuItem.getActionView();
+
+        switch (movieCategory) {
+            case Constants.UPCOMING_MOVIES:
+                searchView.setQueryHint(getString(R.string.search_upcoming_movies));
+                break;
+            case Constants.TOP_RATED_MOVIES:
+                searchView.setQueryHint(getString(R.string.search_top_rated_movies));
+                break;
+            default:
+                searchView.setQueryHint(getString(R.string.search_popular_movies));
+                break;
+        }
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+
     }
 }

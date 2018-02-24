@@ -67,6 +67,9 @@ public class GetConfigurationCommand implements Command<TmdbConfiguration>, Call
             case ApiStatus.Code.SERVER_ERROR:
                 listener.notifyError(ApiStatus.SERVER_ERROR);
                 break;
+            case ApiStatus.Code.UNSATISFIABLE_REQUEST_ERROR:
+                listener.notifyError(ApiStatus.SERVER_ERROR);
+                break;
             case ApiStatus.Code.CLIENT_ERROR:
                 listener.notifyError(ApiStatus.CLIENT_ERROR);
                 break;

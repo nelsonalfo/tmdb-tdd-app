@@ -1,10 +1,11 @@
-package nelsonalfo.tmdbunittestsapp.screens.list;
+package nelsonalfo.tmdbunittestsapp.screens.list.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import nelsonalfo.tmdbunittestsapp.models.Constants;
+import nelsonalfo.tmdbunittestsapp.screens.list.MoviesCategoryFragment;
 
 
 /**

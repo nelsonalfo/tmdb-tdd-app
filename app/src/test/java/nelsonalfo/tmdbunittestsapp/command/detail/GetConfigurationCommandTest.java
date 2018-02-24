@@ -130,6 +130,16 @@ public class GetConfigurationCommandTest {
     }
 
     @Test
+    public void onResponse_theApiReturnAnUnsatisfiableRequestError_notifyTheError() throws Exception {
+        Response<TmdbConfiguration> errorResponse = Response.error(ApiStatus.Code.UNSATISFIABLE_REQUEST_ERROR, errorBody);
+
+        command.onResponse(caller, errorResponse);
+
+        verify(listener, never()).receiveConfiguration(any(TmdbConfiguration.class));
+        verify(listener).notifyError(eq(ApiStatus.SERVER_ERROR));
+    }
+
+    @Test
     public void onResponse_theApiReturnAnClientError_notifyTheError() throws Exception {
         Response<TmdbConfiguration> errorResponse = Response.error(ApiStatus.Code.CLIENT_ERROR, errorBody);
 

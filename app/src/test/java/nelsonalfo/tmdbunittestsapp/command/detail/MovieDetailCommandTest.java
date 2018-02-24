@@ -143,6 +143,16 @@ public class MovieDetailCommandTest {
     }
 
     @Test
+    public void onResponse_theApiReturnAnUnsatisfiableRequestError_notifyTheError() throws Exception {
+        Response<MovieDetail> errorResponse = Response.error(ApiStatus.Code.UNSATISFIABLE_REQUEST_ERROR, errorBody);
+
+        command.onResponse(caller, errorResponse);
+
+        verify(listener, never()).receiveMovieDetail(any(MovieDetail.class));
+        verify(listener).notifyError(eq(ApiStatus.SERVER_ERROR));
+    }
+
+    @Test
     public void onFailure_networkError_notifyTheError() throws Exception {
         IOException exception = new IOException();
 

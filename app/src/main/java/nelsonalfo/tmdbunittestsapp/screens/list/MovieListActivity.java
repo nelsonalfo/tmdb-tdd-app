@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nelsonalfo.tmdbunittestsapp.R;
+import nelsonalfo.tmdbunittestsapp.screens.list.adapter.MovieCategoriesViewPagerAdapter;
 
 
 public class MovieListActivity extends AppCompatActivity {
