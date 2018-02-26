@@ -1,4 +1,4 @@
-package nelsonalfo.tmdbunittestsapp.command.detail;
+package nelsonalfo.tmdbunittestsapp.command.list;
 
 import android.support.annotation.NonNull;
 
@@ -20,28 +20,43 @@ import retrofit2.Response;
  * Created by nelso on 27/12/2017.
  */
 
-public class CommandGetMovies implements Command<List<MovieResume>>, Callback<MoviesResponse> {
+public class GetMoviesCommand implements Command<List<MovieResume>>, Callback<MoviesResponse> {
+    private static final String EXCEPTION_MESSAGE = "An instance of TheMovieDbRestApi and an instance of GetMoviesCommand.Listener are required";
+
     private final TheMovieDbRestApi service;
-    private Listener<List<MovieResume>> listener;
+    private Listener listener;
+    private String category;
 
 
-    public CommandGetMovies(TheMovieDbRestApi service) {
-
+    public GetMoviesCommand(TheMovieDbRestApi service) {
         this.service = service;
     }
 
     @Override
-    public void run() throws IllegalArgumentException {
+    public void execute() throws IllegalArgumentException {
         if (service == null || listener == null) {
-            throw new IllegalArgumentException("An instance of TheMovieDbRestApi and an instance of Command.Listener are required");
+            throw new IllegalArgumentException(EXCEPTION_MESSAGE);
         }
 
-        Call<MoviesResponse> caller = service.getMovies(Constants.MOST_POPULAR_MOVIES, Constants.API_KEY);
-        caller.enqueue(this);
+        if (category == null || category.isEmpty()) {
+            category = Constants.MOST_POPULAR_MOVIES;
+        }
+
+        switch (category) {
+            case Constants.TOP_RATED_MOVIES:
+                service.getTopRatedMovies(Constants.API_KEY).enqueue(this);
+                break;
+            case Constants.UPCOMING_MOVIES:
+                service.getUpcomingMovies(Constants.API_KEY).enqueue(this);
+                break;
+            case Constants.MOST_POPULAR_MOVIES:
+                service.getMovies(Constants.MOST_POPULAR_MOVIES, Constants.API_KEY).enqueue(this);
+                break;
+        }
+
     }
 
-    @Override
-    public void setListener(Listener<List<MovieResume>> listener) {
+    public void setListener(Listener listener) {
         this.listener = listener;
     }
 
@@ -56,11 +71,19 @@ public class CommandGetMovies implements Command<List<MovieResume>>, Callback<Mo
         }
     }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
     private void handleSuccess(@NonNull Response<MoviesResponse> response) {
         MoviesResponse moviesResponse = response.body();
 
         if (moviesResponse != null) {
-            listener.receiveValue(moviesResponse.results);
+            listener.receiveMovies(moviesResponse.results);
         } else {
             listener.notifyError(ApiStatus.NO_RESULT);
         }
@@ -71,6 +94,9 @@ public class CommandGetMovies implements Command<List<MovieResume>>, Callback<Mo
             case ApiStatus.Code.SERVER_ERROR:
                 listener.notifyError(ApiStatus.SERVER_ERROR);
                 break;
+            case ApiStatus.Code.UNSATISFIABLE_REQUEST_ERROR:
+                listener.notifyError(ApiStatus.SERVER_ERROR);
+                break;
             case ApiStatus.Code.CLIENT_ERROR:
                 listener.notifyError(ApiStatus.CLIENT_ERROR);
                 break;
@@ -79,12 +105,16 @@ public class CommandGetMovies implements Command<List<MovieResume>>, Callback<Mo
 
     @Override
     public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable ex) {
-        if(listener == null) {
+        if (listener == null) {
             return;
         }
 
-        if(ex instanceof IOException) {
+        if (ex instanceof IOException) {
             listener.notifyError(ApiStatus.NETWORK_ERROR);
         }
+    }
+
+    public interface Listener extends Command.Listener {
+        void receiveMovies(List<MovieResume> listener);
     }
 }

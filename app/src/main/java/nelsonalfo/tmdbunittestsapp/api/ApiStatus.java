@@ -13,5 +13,6 @@ public interface ApiStatus {
     interface Code {
         int SERVER_ERROR = 500;
         int CLIENT_ERROR = 401;
+        int UNSATISFIABLE_REQUEST_ERROR = 504;
     }
 }

@@ -1,10 +1,10 @@
 package nelsonalfo.tmdbunittestsapp.command;
 
-import java.util.List;
-
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
-import nelsonalfo.tmdbunittestsapp.command.detail.CommandGetMovies;
-import nelsonalfo.tmdbunittestsapp.models.MovieResume;
+import nelsonalfo.tmdbunittestsapp.command.detail.MovieDetailCommand;
+import nelsonalfo.tmdbunittestsapp.command.list.GetConfigurationCommand;
+import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
+import nelsonalfo.tmdbunittestsapp.models.Constants;
 
 
 /**
@@ -12,11 +12,56 @@ import nelsonalfo.tmdbunittestsapp.models.MovieResume;
  */
 
 public class CommandFactory {
+    private static final String EXCEPTION_MESSAGE = "Cant create the command without a TheMovieDbRestApi instance";
+
+
     public CommandFactory() {
         throw new IllegalArgumentException("Cant be instantiated");
     }
 
-    public static Command<List<MovieResume>> createCommandGetMovies(TheMovieDbRestApi service){
-        return new CommandGetMovies(service);
+
+    public static GetMoviesCommand createGetPopularMoviesCommand(TheMovieDbRestApi service) {
+        if (service == null) {
+            throw new IllegalArgumentException(EXCEPTION_MESSAGE);
+        }
+
+        final GetMoviesCommand command = new GetMoviesCommand(service);
+        command.setCategory(Constants.MOST_POPULAR_MOVIES);
+
+        return command;
     }
+
+    public static GetMoviesCommand createGetTopRatedMoviesCommand(TheMovieDbRestApi service) {
+        if (service == null) {
+            throw new IllegalArgumentException(EXCEPTION_MESSAGE);
+        }
+
+        final GetMoviesCommand command = new GetMoviesCommand(service);
+        command.setCategory(Constants.TOP_RATED_MOVIES);
+
+        return command;
+    }
+
+    public static GetMoviesCommand createGetUpcomingMoviesCommand(TheMovieDbRestApi service) {
+        if (service == null) {
+            throw new IllegalArgumentException(EXCEPTION_MESSAGE);
+        }
+
+        final GetMoviesCommand command = new GetMoviesCommand(service);
+        command.setCategory(Constants.UPCOMING_MOVIES);
+
+        return command;
+    }
+
+    public static GetConfigurationCommand createGetConfigurationCommand(TheMovieDbRestApi service) {
+        if (service == null) throw new IllegalArgumentException(EXCEPTION_MESSAGE);
+        return new GetConfigurationCommand(service);
+    }
+
+    public static MovieDetailCommand createGetMovieDetailCommand(TheMovieDbRestApi service, int movieId) {
+        if (service == null) throw new IllegalArgumentException(EXCEPTION_MESSAGE);
+        return new MovieDetailCommand(service, movieId);
+    }
+
+
 }

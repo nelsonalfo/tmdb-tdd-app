@@ -3,36 +3,54 @@ package nelsonalfo.tmdbunittestsapp.screens.list;
 import java.util.List;
 
 import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
-import nelsonalfo.tmdbunittestsapp.command.Command;
+import nelsonalfo.tmdbunittestsapp.command.list.GetConfigurationCommand;
+import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
+import nelsonalfo.tmdbunittestsapp.models.TmdbConfiguration;
 
 
 /**
  * Created by nelso on 27/12/2017.
  */
 
-public class MovieListPresenter implements MovieListContract.Presenter, Command.Listener<List<MovieResume>> {
+public class MovieListPresenter implements MovieListContract.Presenter, GetMoviesCommand.Listener, GetConfigurationCommand.Listener {
     private MovieListContract.View view;
-    private Command<List<MovieResume>> command;
+    private final GetMoviesCommand moviesCommand;
+    private final GetConfigurationCommand configCommand;
 
 
-    public MovieListPresenter(MovieListContract.View view, Command<List<MovieResume>> command) {
-        if (view == null || command == null) {
-            throw new IllegalArgumentException("The params are needed");
+    public MovieListPresenter(MovieListContract.View view, GetMoviesCommand moviesCommand, GetConfigurationCommand configCommand) throws IllegalArgumentException {
+        if (view == null || moviesCommand == null || configCommand == null) {
+            throw new IllegalArgumentException("All the params are needed");
         }
 
         this.view = view;
-        this.command = command;
+
+        this.configCommand = configCommand;
+        this.configCommand.setListener(this);
+
+        this.moviesCommand = moviesCommand;
+        this.moviesCommand.setListener(this);
     }
 
     @Override
     public void callApi() {
-        command.setListener(this);
-        command.run();
+        configCommand.setListener(this);
+        configCommand.execute();
     }
 
     @Override
-    public void receiveValue(List<MovieResume> movies) {
+    public void receiveConfiguration(TmdbConfiguration configuration) {
+        if (configuration != null) {
+            view.setConfiguration(configuration);
+            moviesCommand.execute();
+        } else {
+            view.showThereIsNoMovies();
+        }
+    }
+
+    @Override
+    public void receiveMovies(List<MovieResume> movies) {
         if (movies != null && !movies.isEmpty()) {
             view.showMovies(movies);
         } else {

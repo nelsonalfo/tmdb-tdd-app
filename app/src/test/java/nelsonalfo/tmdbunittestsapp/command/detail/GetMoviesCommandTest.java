@@ -7,11 +7,10 @@ import org.mockito.Mock;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 
 import nelsonalfo.tmdbunittestsapp.api.ApiStatus;
 import nelsonalfo.tmdbunittestsapp.api.TheMovieDbRestApi;
-import nelsonalfo.tmdbunittestsapp.command.Command;
+import nelsonalfo.tmdbunittestsapp.command.list.GetMoviesCommand;
 import nelsonalfo.tmdbunittestsapp.models.Constants;
 import nelsonalfo.tmdbunittestsapp.models.MovieResume;
 import nelsonalfo.tmdbunittestsapp.models.MoviesResponse;
@@ -31,59 +30,107 @@ import static org.mockito.MockitoAnnotations.initMocks;
 /**
  * Created by nelso on 27/12/2017.
  */
-public class CommandGetMoviesTest {
+public class GetMoviesCommandTest {
+    private static final String EXPECTED_EXCEPTION_MESSAGE = "An instance of TheMovieDbRestApi and an instance of GetMoviesCommand.Listener are required";
+
     @Mock
     private TheMovieDbRestApi service;
     @Mock
     private Call<MoviesResponse> caller;
     @Mock
-    private Command.Listener<List<MovieResume>> listener;
+    private GetMoviesCommand.Listener listener;
     @Mock
     private ResponseBody errorBody;
 
-    private CommandGetMovies command;
+    private GetMoviesCommand command;
 
 
-    public CommandGetMoviesTest() {
+    public GetMoviesCommandTest() {
     }
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
 
-        command = new CommandGetMovies(service);
+        command = new GetMoviesCommand(service);
         command.setListener(listener);
     }
 
     @Test
-    public void run_serviceIsSetAndListenerIsSet_callGetMoviesApi() throws Exception {
+    public void execute_serviceIsSetAndListenerIsSetAndCategoryIsMostPopular_callGetPopularMoviesApi() throws Exception {
         when(service.getMovies(anyString(), anyString())).thenReturn(caller);
+        command.setCategory(Constants.MOST_POPULAR_MOVIES);
 
-        command.run();
+        command.execute();
 
         verify(service).getMovies(eq(Constants.MOST_POPULAR_MOVIES), eq(Constants.API_KEY));
         verify(caller).enqueue(eq(command));
     }
 
     @Test
-    public void run_serviceIsNull_throwAnException() throws Exception {
-        command = new CommandGetMovies(null);
+    public void execute_serviceIsSetAndListenerIsSetAndCategoryIsNull_callGetPopularMoviesApi() throws Exception {
+        when(service.getMovies(anyString(), anyString())).thenReturn(caller);
+        command.setCategory(null);
 
-        try {
-            command.run();
-        } catch (IllegalArgumentException ex) {
-            assertThat(ex).hasMessageThat().isEqualTo("An instance of TheMovieDbRestApi and an instance of Command.Listener are required");
-        }
+        command.execute();
+
+        verify(service).getMovies(eq(Constants.MOST_POPULAR_MOVIES), eq(Constants.API_KEY));
+        verify(caller).enqueue(eq(command));
     }
 
     @Test
-    public void run_listenerIsNull_throwAnException() throws Exception {
+    public void execute_serviceIsSetAndListenerIsSetAndCategoryIsEmpty_callGetPopularMoviesApi() throws Exception {
+        when(service.getMovies(anyString(), anyString())).thenReturn(caller);
+        command.setCategory("");
+
+        command.execute();
+
+        verify(service).getMovies(eq(Constants.MOST_POPULAR_MOVIES), eq(Constants.API_KEY));
+        verify(caller).enqueue(eq(command));
+    }
+
+    @Test
+    public void execute_serviceIsSetAndListenerIsSetAndCategoryIsNotSet_callGetPopularMoviesApi() throws Exception {
+        when(service.getMovies(anyString(), anyString())).thenReturn(caller);
+
+        command.execute();
+
+        verify(service).getMovies(eq(Constants.MOST_POPULAR_MOVIES), eq(Constants.API_KEY));
+        verify(caller).enqueue(eq(command));
+    }
+
+    @Test
+    public void execute_serviceIsSetAndListenerIsSetAndCategoryIsTopRatedt_callGetTopRatedMoviesApi() throws Exception {
+        when(service.getTopRatedMovies(anyString())).thenReturn(caller);
+        command.setCategory(Constants.TOP_RATED_MOVIES);
+
+        command.execute();
+
+        verify(service).getTopRatedMovies(eq(Constants.API_KEY));
+        verify(caller).enqueue(eq(command));
+    }
+
+
+    @Test
+    public void execute_serviceIsNull_throwAnException() throws Exception {
+        command = new GetMoviesCommand(null);
+
+        try {
+            command.execute();
+        } catch (IllegalArgumentException ex) {
+            assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_EXCEPTION_MESSAGE);
+        }
+    }
+
+
+    @Test
+    public void execute_listenerIsNull_throwAnException() throws Exception {
         command.setListener(null);
 
         try {
-            command.run();
+            command.execute();
         } catch (IllegalArgumentException ex) {
-            assertThat(ex).hasMessageThat().isEqualTo("An instance of TheMovieDbRestApi and an instance of Command.Listener are required");
+            assertThat(ex).hasMessageThat().isEqualTo(EXPECTED_EXCEPTION_MESSAGE);
         }
     }
 
@@ -95,7 +142,7 @@ public class CommandGetMoviesTest {
 
         command.onResponse(caller, response);
 
-        verify(listener).receiveValue(eq(body.results));
+        verify(listener).receiveMovies(eq(body.results));
     }
 
     @Test
@@ -104,7 +151,7 @@ public class CommandGetMoviesTest {
 
         command.onResponse(caller, response);
 
-        verify(listener, never()).receiveValue(ArgumentMatchers.<MovieResume>anyList());
+        verify(listener, never()).receiveMovies(ArgumentMatchers.<MovieResume>anyList());
         verify(listener).notifyError(eq(ApiStatus.NO_RESULT));
     }
 
@@ -115,7 +162,7 @@ public class CommandGetMoviesTest {
         command.setListener(null);
         command.onResponse(caller, response);
 
-        verify(listener, never()).receiveValue(ArgumentMatchers.<MovieResume>anyList());
+        verify(listener, never()).receiveMovies(ArgumentMatchers.<MovieResume>anyList());
         verify(listener, never()).notifyError(anyString());
     }
 
@@ -125,7 +172,7 @@ public class CommandGetMoviesTest {
 
         command.onResponse(caller, errorResponse);
 
-        verify(listener, never()).receiveValue(ArgumentMatchers.<MovieResume>anyList());
+        verify(listener, never()).receiveMovies(ArgumentMatchers.<MovieResume>anyList());
         verify(listener).notifyError(eq(ApiStatus.SERVER_ERROR));
     }
 
@@ -135,8 +182,18 @@ public class CommandGetMoviesTest {
 
         command.onResponse(caller, errorResponse);
 
-        verify(listener, never()).receiveValue(ArgumentMatchers.<MovieResume>anyList());
+        verify(listener, never()).receiveMovies(ArgumentMatchers.<MovieResume>anyList());
         verify(listener).notifyError(eq(ApiStatus.CLIENT_ERROR));
+    }
+
+    @Test
+    public void onResponse_theApiReturnAnUnsatisfiableRequestError_notifyTheError() throws Exception {
+        Response<MoviesResponse> errorResponse = Response.error(ApiStatus.Code.UNSATISFIABLE_REQUEST_ERROR, errorBody);
+
+        command.onResponse(caller, errorResponse);
+
+        verify(listener, never()).receiveMovies(ArgumentMatchers.<MovieResume>anyList());
+        verify(listener).notifyError(eq(ApiStatus.SERVER_ERROR));
     }
 
     @Test

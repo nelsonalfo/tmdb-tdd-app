@@ -11,4 +11,6 @@ public interface Constants {
     String SMALL_IMAGE_SIZE_BASE_URL = "http://image.tmdb.org/t/p/w92/";
 
     String MOST_POPULAR_MOVIES = "popularity.desc";
+    String TOP_RATED_MOVIES = "TOP_RATED_MOVIES";
+    String UPCOMING_MOVIES = "UPCOMING_MOVIES";
 }
