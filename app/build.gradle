@@ -36,7 +36,7 @@ dependencies {
 
     // Librerias para Unit Test
     testCompile "com.google.truth:truth:0.40" // Libreria creada por google para manejar assertions
-    testCompile "org.mockito:mockito-core:2.12.0" // Libreria para crear objetos Mock y verificar la ejecucion de metodos dentro de nuestro SUT
+    testCompile "org.mockito:mockito-core:2.8.9" // Libreria para crear objetos Mock y verificar la ejecucion de metodos dentro de nuestro SUT
     testCompile "org.powermock:powermock-api-mockito2:1.7.3" // Libreria para hacer Mock de metodos estaticos
     testCompile "org.powermock:powermock-module-junit4:1.7.3"
 
